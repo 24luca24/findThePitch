@@ -1,4 +1,4 @@
-package model;
+package com.fl.findthepitch.model;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
@@ -7,11 +7,12 @@ import java.io.IOException;
 import java.io.InputStream;
 
 
-public class FireBaseConnection {
-    public static void main(String[] args) {
+public class FirebaseConnection {
+
+    public static void initializeFirebase() throws IOException {
         try {
-            // Load from classpath (correct for Maven)
-            InputStream serviceAccount = FireBaseConnection.class.getClassLoader()
+            //Load from classpath
+            InputStream serviceAccount = FirebaseConnection.class.getClassLoader()
                     .getResourceAsStream("serviceAccountKey.json");
 
             if (serviceAccount == null) {
@@ -26,7 +27,8 @@ public class FireBaseConnection {
             System.out.println("🔥 Firebase initialized successfully!");
 
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Error initializing Firebase: " + e.getMessage());
         }
     }
+
 }

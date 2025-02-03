@@ -9,4 +9,5 @@ module com.fl.findthepitch {
 
     opens com.fl.findthepitch to javafx.fxml;
     exports com.fl.findthepitch;
+    exports com.fl.findthepitch.view;
 }
