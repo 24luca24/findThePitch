@@ -48,6 +48,37 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Firebase Admin SDK -->
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>8.1.0</version>
+        </dependency>
+
+        <!-- SLF4J Logging -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.1.0-alpha1</version> <!-- Use a compatible SLF4J version -->
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.1.0-alpha1</version> <!-- Use the same version for the simple binding -->
+        </dependency>
+        <!-- Google Authentication for Firebase (required for Credentials) -->
+        <dependency>
+            <groupId>com.google.auth</groupId>
+            <artifactId>google-auth-library-oauth2-http</artifactId>
+            <version>1.12.0</version> <!-- Ensure this is the latest version -->
+        </dependency>
+
+        <!-- Google Cloud Firestore (needed for Firestore functionality) -->
+        <dependency>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-firestore</artifactId>
+            <version>3.6.0</version> <!-- Use the latest version -->
+        </dependency>
     </dependencies>
 
     <build>
