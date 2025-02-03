@@ -3,6 +3,7 @@ module com.fl.findthepitch {
     requires javafx.fxml;
     requires firebase.admin;
     requires com.google.auth.oauth2;
+    requires com.google.auth;
     requires google.cloud.firestore;
 
 
