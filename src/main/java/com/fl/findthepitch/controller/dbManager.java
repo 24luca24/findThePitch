@@ -1,12 +1,12 @@
 package com.fl.findthepitch.controller;
 
-import com.fl.findthepitch.model.DatabaseConnection;
+
+
+import com.fl.findthepitch.model.Database;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-
-import static com.fl.findthepitch.model.DatabaseConnection.*;
 
 /**
  * This class is responsible for managing the database.So we casn add queries here.
@@ -18,8 +18,8 @@ public class dbManager {
     public dbManager() {
         try {
             // Establish the connection to the database
-            DatabaseConnection.createDatabaseIfNotExists();
-            this.connection = DatabaseConnection.getConnection();
+            Database.createDatabaseIfNotExists();
+            this.connection = Database.getConnection();
             System.out.println("Database connection established successfully.");
         } catch (SQLException e) {
             e.printStackTrace();

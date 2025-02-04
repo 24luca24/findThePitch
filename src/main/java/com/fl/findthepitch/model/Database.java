@@ -5,7 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class DatabaseConnection {
+public class Database {
+
 
     private static final String DBNAME = "findThePitch";
     private static final String URL = "jdbc:postgresql://localhost:5432/" + DBNAME;
@@ -15,8 +16,10 @@ public class DatabaseConnection {
     //Connection instance
     private static Connection connection;
 
+    private static Statement statement;
+
     //Private constructor to prevent instantiation
-    private void DatabaseConnection() {
+    private void Database() {
     }
 
     // Method to get the database connection
@@ -75,5 +78,3 @@ public class DatabaseConnection {
         }
     }
 }
-
-
