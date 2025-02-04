@@ -53,21 +53,9 @@
 
         <!-- Firebase Admin SDK (Updated to 9.3.0) -->
         <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>9.3.0</version>
-        </dependency>
-
-        <!-- SLF4J (Use stable version 2.0.9) -->
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>2.0.9</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>2.0.9</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.5.0</version> <!-- or latest version -->
         </dependency>
 
         <!-- Google Authentication for Firebase -->
@@ -77,11 +65,11 @@
             <version>1.22.0</version>
         </dependency>
 
-        <!-- Google Cloud Firestore -->
+        <!-- hash for password -->
         <dependency>
-            <groupId>com.google.cloud</groupId>
-            <artifactId>google-cloud-firestore</artifactId>
-            <version>3.6.0</version>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
         </dependency>
     </dependencies>
 
@@ -117,7 +105,7 @@
             </plugin>
         </plugins>
 
-        <!-- ✅ Fix placement of resources -->
+        <!-- Fix placement of resources -->
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
