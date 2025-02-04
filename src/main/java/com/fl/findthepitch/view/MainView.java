@@ -9,6 +9,8 @@ public class MainView extends Application {
     @Override
     public void start(Stage primaryStage) {
         dbManager db = new dbManager();
+        db.createUserTable();
+        db.createPitchTable();
         primaryStage.setTitle("Find The Pitch");
         primaryStage.show();
     }

@@ -76,10 +76,7 @@ public class Database {
         }
     }
 
-
-
-
-        //Method to close the connection
+    //Method to close the connection
     public static void closeConnection() throws SQLException {
         if (connection != null && !connection.isClosed()) {
             connection.close();
