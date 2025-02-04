@@ -14,6 +14,14 @@
         <java.version>21</java.version>
     </properties>
 
+    <repositories>
+        <!-- Maven Central Repository for JavaFX and other libraries -->
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <!-- JavaFX -->
         <dependency>
@@ -34,6 +42,16 @@
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
+            <version>21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>21</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
             <version>21</version>
         </dependency>
 
@@ -110,7 +128,7 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <includes>
-                    <include>**/*.json</include>
+                    <include>**/*</include>
                 </includes>
             </resource>
         </resources>
