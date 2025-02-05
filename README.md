@@ -1,2 +1,2 @@
 # findThePitch
-Application for finding football / bbasketball / padel / beach volley ... pitch.
+Application for finding football / basketball / padel / beach volley ... pitch.
