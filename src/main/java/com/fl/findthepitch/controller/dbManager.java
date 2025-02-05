@@ -3,12 +3,10 @@ package com.fl.findthepitch.controller;
 
 
 import com.fl.findthepitch.model.Database;
+import com.fl.findthepitch.model.PasswordUtils;
 import com.fl.findthepitch.model.UserData;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 /**
  * This class is responsible for managing the database.So we can add queries here.
@@ -92,26 +90,24 @@ public class dbManager {
     public boolean checkUsername(String username) {
         //TODO: query oper cercare utente se esiste true altrimenti false
         String result = "";//Risultato query
-        if (result == username) {
-            return true;
-        }
-        return false;
+        return result.equals(username);
     }
 
     public boolean registerUser(UserData userData) {
+        // Store hashed password
+        String hashedPassword = PasswordUtils.hashPassword(userData.getHashPassword()); // Ensure hashing before storing
+
         String insertUserSQL = "INSERT INTO users (name, surname, username, email, password_hash, age, google_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         try {
-            //Begin transaction (Disable auto-commit )
             connection.setAutoCommit(false);
 
-            //Prepare the query (compile once and perform with different values)
             try (PreparedStatement pstmt = connection.prepareStatement(insertUserSQL)) {
                 pstmt.setString(1, userData.getName());
                 pstmt.setString(2, userData.getSurname());
                 pstmt.setString(3, userData.getUsername());
                 pstmt.setString(4, userData.getMail());
-                pstmt.setString(5, userData.getHashPassword());
+                pstmt.setString(5, hashedPassword);
                 pstmt.setInt(6, userData.getAge());
                 pstmt.setString(7, userData.getGoogleID());
 
@@ -121,12 +117,10 @@ public class dbManager {
                     throw new SQLException("User registration failed, no rows affected.");
                 }
             }
-            //If good commit the transaction
             connection.commit();
             return true;
         } catch (SQLException e) {
             try {
-                //Rollback if an error occur
                 connection.rollback();
                 System.err.println("Transaction rolled back: " + e.getMessage());
             } catch (SQLException rollbackEx) {
@@ -135,11 +129,29 @@ public class dbManager {
             return false;
         } finally {
             try {
-                //Restore the autocommit
                 connection.setAutoCommit(true);
             } catch (SQLException ex) {
                 ex.printStackTrace();
             }
         }
+    }
+
+    public boolean validateLogin(String username, String enteredPassword) {
+        String query = "SELECT password_hash FROM users WHERE username = ?";
+
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                // Get the stored password and check
+                String storedHashedPassword = rs.getString("password_hash");
+                return PasswordUtils.checkPassword(enteredPassword, storedHashedPassword);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //If not found
+        return false;
     }
 }

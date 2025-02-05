@@ -1,5 +1,6 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -19,13 +20,20 @@ public class Login {
 
     @FXML
     private void sendLoginData() {
-        String username = this.username.getText();
-        String password = this.password.getText();
+        try {
+            dbManager db = new dbManager();
+            String enteredUsername = username.getText();
+            String enteredPassword = password.getText();
 
-        //Packing data into a UserData object
-        UserData userData = new UserData(username, password);
-
-        // Make a query to the database to check if the user exists
-        System.out.println("Data sent to the database");
+            if (db.validateLogin(enteredUsername, enteredPassword)) {
+                System.out.println("Login successful!");
+                //TODO: pass to the main panel (for registered user)
+            } else {
+                System.out.println("Invalid username or password.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error during login.");
+        }
     }
 }
