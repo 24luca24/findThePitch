@@ -62,9 +62,20 @@ public class MainView extends Application {
 
     //Method for Login Button
     @FXML
-    private void goToLoginPage() {
+    private void goToLoginPage() throws IOException {
         System.out.println("Go to Login Page");
-        // Add your logic for the login page
+
+        //Load the Registration FXML file
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
+        AnchorPane loginRoot = loader.load();
+
+        // Get the scene for the Registration page
+        Scene registrationScene = new Scene(loginRoot);
+
+        // Get the current stage and set the new scene
+        Stage currentStage = (Stage) login.getScene().getWindow();
+        currentStage.setScene(registrationScene);
+        currentStage.setTitle("Login Page");
     }
 
     //Method for Login As Guest Button

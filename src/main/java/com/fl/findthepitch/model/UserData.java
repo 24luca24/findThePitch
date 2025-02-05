@@ -32,6 +32,12 @@ public class UserData {
         this.googleID = googleID;
     }
 
+    //Constructor for login
+    public UserData(String username, String password) {
+        this.username = username;
+        this.hashPassword = password;
+    }
+
     public String getName() {
         return name;
     }
