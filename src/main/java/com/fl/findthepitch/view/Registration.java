@@ -1,17 +1,19 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
-import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
-public class Registration extends Application {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Registration {
 
     @FXML
     private TextField name;
@@ -34,34 +36,133 @@ public class Registration extends Application {
     @FXML
     private Button register;
 
+    dbManager db = new dbManager();;
+
     @FXML
     private void sendRegisteredData() {
-        String name = this.name.getText();
-        String surname = this.surname.getText();
-        String email = this.email.getText();
-        int age = Integer.parseInt(this.age.getText());
-        String username = this.username.getText();
-        String password = this.password.getText();
+        List<String> errors = checkFields(); // Check fields for errors
+        if (errors.isEmpty()) { // No errors, proceed with registration
+            try {
+                UserData userData = new UserData(
+                        name.getText(),
+                        surname.getText(),
+                        username.getText(),
+                        email.getText(),
+                        password.getText(),
+                        Integer.parseInt(age.getText())
+                );
 
-        // Packing data into a UserData object
-        UserData userData = new UserData(name, surname, username, email, password, age);
+                if (db.registerUser(userData)) {
+                    System.out.println("User registered successfully.");
 
-        // Make a query to save the object in the database
-        System.out.println("Data sent to the database");
+                    //Clear all the text fields
+                    name.clear();
+                    surname.clear();
+                    email.clear();
+                    age.clear();
+                    username.clear();
+                    password.clear();
+
+                    //Go back to the main view after successful registration
+                    switchScene("/MainView.fxml", "Main View", register); // This is assuming the path to your main view is /MainView.fxml
+
+                } else {
+                    System.out.println("User registration failed.");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                System.out.println("Error during registration.");
+            }
+        } else {
+            // Show errors in an alert if there are any
+            showAlert(errors);
+        }
     }
 
+    private List<String> checkFields() {
+        List<String> errors = new ArrayList<>();
+        if (this.name.getText().isEmpty()) {
+            errors.add("Name field is empty");
+        }
+        if (this.surname.getText().isEmpty()) {
+            errors.add("Surname field is empty");
+        }
+        if(this.age.getText().isEmpty() || !checkAgeIsInteger()){ //age not an int
+            errors.add("Age field is empty");
+        }
+        if (this.email.getText().isEmpty() || !checkEmailIsValid()){ //email not valid)
+            errors.add("Email field is empty OR not valid");
+        }
+        if (this.username.getText().isEmpty() || checkUsernameExist()){ //username not valid
+            errors.add("Username field is empty OR already exists");
+        }
+        if (this.password.getText().isEmpty() || !checkPasswordIsValid()) {
+            errors.add("Password field is empty OR not valid (1 Uppercase letter, 1 special character, 8 characters long)");
+        }
 
-    @Override
-    public void start(Stage stage) throws Exception {
+        return errors;
+    }
 
-        //Load FXML file and set the scene
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Registration.fxml"));
-        AnchorPane root = loader.load();
+    //SE TRUE AGE E'INTERO
+    private boolean checkAgeIsInteger() {
+        try {
+            Integer.parseInt(this.age.getText());
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
 
-        //Set up the scene with the loaded root element
-        Scene scene = new Scene(root);
-        stage.setTitle("Find The Pitch");
-        stage.setScene(scene);
-        stage.show();
+    //IF EMAIL MATCHES RETURN TRUE
+    private boolean checkEmailIsValid() {
+        String email = this.email.getText();
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email.matches(emailRegex);
+    }
+
+    //SE TRUE USERNAME GIA ESISTENTE
+    private boolean checkUsernameExist (){
+        String username = this.username.getText();
+        boolean result = db.checkUsername(username);
+        if(result){
+            return true;
+        }
+        return false;
+    }
+
+    //IF PASSWORD MATCHES RETURN TRUE
+    private boolean checkPasswordIsValid() {
+        String password = this.password.getText();
+        String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
+        return password.matches(passwordRegex);
+    }
+
+    //Show an alert with the error messages
+    private void showAlert(List<String> errors) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Registration Errors");
+        alert.setHeaderText("There were some errors with your registration:");
+
+        // Join errors into a single string separated by line breaks
+        StringBuilder errorMessages = new StringBuilder();
+        for (String error : errors) {
+            errorMessages.append(error).append("\n");
+        }
+
+        alert.setContentText(errorMessages.toString());
+        alert.showAndWait();
+    }
+
+    //Centralized method for switching scenes
+    private void switchScene(String fxmlFile, String title, Button button) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        AnchorPane newRoot = loader.load();
+        Scene newScene = new Scene(newRoot);
+
+        // Get the Stage from the button clicked
+        Stage currentStage = (Stage) button.getScene().getWindow();
+        currentStage.setScene(newScene);
+        currentStage.setTitle(title);
     }
 }
+

@@ -26,7 +26,7 @@ public class MainView extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        //Initialize the database
+        //Initialize the database //TODO: checkare se non ricrea le tabelle ogni volta
         dbManager db = new dbManager();
         db.createUserTable();
         db.createPitchTable();
@@ -42,40 +42,31 @@ public class MainView extends Application {
         primaryStage.show();
     }
 
+    //TODO: see if works
+    //Centralized method for switching scenes
+    private void switchScene(String fxmlFile, String title, Button button) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
+        AnchorPane newRoot = loader.load();
+        Scene newScene = new Scene(newRoot);
+
+        // Get the Stage from the button clicked
+        Stage currentStage = (Stage) button.getScene().getWindow();
+        currentStage.setScene(newScene);
+        currentStage.setTitle(title);
+    }
+
     //Method for Register Button
     @FXML
     private void goToRegisterPage() throws IOException{
-        System.out.println("Go to Register Page");
-
-        //Load the Registration FXML file
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Registration.fxml"));
-        AnchorPane registrationRoot = loader.load();
-
-        // Get the scene for the Registration page
-        Scene registrationScene = new Scene(registrationRoot);
-
-        // Get the current stage and set the new scene
-        Stage currentStage = (Stage) register.getScene().getWindow();
-        currentStage.setScene(registrationScene);
-        currentStage.setTitle("Registration Page");
+        System.out.println("Go to Register Page"); //TODO: REMOVE THIS LINE
+        switchScene("/Registration.fxml", "Registration", register);
     }
 
     //Method for Login Button
     @FXML
     private void goToLoginPage() throws IOException {
-        System.out.println("Go to Login Page");
-
-        //Load the Registration FXML file
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/Login.fxml"));
-        AnchorPane loginRoot = loader.load();
-
-        // Get the scene for the Registration page
-        Scene registrationScene = new Scene(loginRoot);
-
-        // Get the current stage and set the new scene
-        Stage currentStage = (Stage) login.getScene().getWindow();
-        currentStage.setScene(registrationScene);
-        currentStage.setTitle("Login Page");
+        System.out.println("Go to Login Page"); //TODO: REMOVE THIS LINE
+        switchScene("/Login.fxml", "Login", login);
     }
 
     //Method for Login As Guest Button

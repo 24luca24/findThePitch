@@ -5,15 +5,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.MainView">
+<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.MainView">
    <children>
-      <ImageView fitHeight="412.0" fitWidth="611.0" layoutY="-1.0" opacity="0.75" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="600.0" fitWidth="400.0" opacity="0.75" pickOnBounds="true">
          <image>
             <Image url="@images/mainView.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="register" layoutX="275.0" layoutY="163.0" mnemonicParsing="false" onAction="#goToRegisterPage" text="Register" />
-      <Button fx:id="login" layoutX="282.0" layoutY="216.0" mnemonicParsing="false" onAction="#goToLoginPage" text="Login" />
-      <Button fx:id="loginAsGuest" layoutX="256.0" layoutY="276.0" mnemonicParsing="false" onAction="#enterApp" text="Login As Guest" />
+      <Button fx:id="register" layoutX="169.0" layoutY="190.0" mnemonicParsing="false" onAction="#goToRegisterPage" text="Register" />
+      <Button fx:id="login" layoutX="176.0" layoutY="250.0" mnemonicParsing="false" onAction="#goToLoginPage" text="Login" />
+      <Button fx:id="loginAsGuest" layoutX="150.0" layoutY="316.0" mnemonicParsing="false" onAction="#enterApp" text="Login As Guest" />
    </children>
 </AnchorPane>

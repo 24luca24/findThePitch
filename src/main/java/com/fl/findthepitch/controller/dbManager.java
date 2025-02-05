@@ -3,8 +3,10 @@ package com.fl.findthepitch.controller;
 
 
 import com.fl.findthepitch.model.Database;
+import com.fl.findthepitch.model.UserData;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -87,5 +89,57 @@ public class dbManager {
         }
     }
 
+    public boolean checkUsername(String username) {
+        //TODO: query oper cercare utente se esiste true altrimenti false
+        String result = "";//Risultato query
+        if (result == username) {
+            return true;
+        }
+        return false;
+    }
 
+    public boolean registerUser(UserData userData) {
+        String insertUserSQL = "INSERT INTO users (name, surname, username, email, password_hash, age, google_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
+
+        try {
+            //Begin transaction (Disable auto-commit )
+            connection.setAutoCommit(false);
+
+            //Prepare the query (compile once and perform with different values)
+            try (PreparedStatement pstmt = connection.prepareStatement(insertUserSQL)) {
+                pstmt.setString(1, userData.getName());
+                pstmt.setString(2, userData.getSurname());
+                pstmt.setString(3, userData.getUsername());
+                pstmt.setString(4, userData.getMail());
+                pstmt.setString(5, userData.getHashPassword());
+                pstmt.setInt(6, userData.getAge());
+                pstmt.setString(7, userData.getGoogleID());
+
+                int affectedRows = pstmt.executeUpdate();
+
+                if (affectedRows == 0) {
+                    throw new SQLException("User registration failed, no rows affected.");
+                }
+            }
+            //If good commit the transaction
+            connection.commit();
+            return true;
+        } catch (SQLException e) {
+            try {
+                //Rollback if an error occur
+                connection.rollback();
+                System.err.println("Transaction rolled back: " + e.getMessage());
+            } catch (SQLException rollbackEx) {
+                rollbackEx.printStackTrace();
+            }
+            return false;
+        } finally {
+            try {
+                //Restore the autocommit
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
 }

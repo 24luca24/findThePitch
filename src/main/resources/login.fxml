@@ -7,15 +7,15 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.Login">
+<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.Login">
    <children>
-      <ImageView fitHeight="400.0" fitWidth="600.0" opacity="0.8" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="603.0" fitWidth="401.0" opacity="0.75" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/login.jpg" />
          </image>
       </ImageView>
-      <TextField fx:id="username" layoutX="220.0" layoutY="126.0" promptText="username" />
-      <PasswordField fx:id="password" layoutX="214.0" layoutY="200.0" promptText="password" />
-      <Button fx:id="login" layoutX="267.0" layoutY="271.0" mnemonicParsing="false" onAction="#sendLoginData" text="Login" />
+      <TextField fx:id="username" layoutX="120.0" layoutY="235.0" promptText="username" />
+      <PasswordField fx:id="password" layoutX="120.0" layoutY="287.0" promptText="password" />
+      <Button fx:id="login" layoutX="176.0" layoutY="347.0" mnemonicParsing="false" onAction="#sendLoginData" text="Login" />
    </children>
 </AnchorPane>
