@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.Login">
+   <children>
+      <ImageView fitHeight="603.0" fitWidth="401.0" opacity="0.75" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@images/login.jpg" />
+         </image>
+      </ImageView>
+      <TextField fx:id="username" layoutX="120.0" layoutY="235.0" promptText="username" />
+      <PasswordField fx:id="password" layoutX="120.0" layoutY="287.0" promptText="password" />
+      <Button fx:id="login" layoutX="176.0" layoutY="347.0" mnemonicParsing="false" onAction="#sendLoginData" text="Login" />
+   </children>
+</AnchorPane>

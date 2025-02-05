@@ -53,20 +53,26 @@ public class Database {
 
     // Method to create the database if it doesn't exist
     public static void createDatabaseIfNotExists() {
-        try (Connection conn = DriverManager.getConnection(URL, USERNAME, PASSWORD)) {
-            Statement stmt = conn.createStatement();
-            String checkDbExists = "SELECT 1 FROM pg_database WHERE datname = '" + DBNAME + "';";
-            var rs = stmt.executeQuery(checkDbExists);
-            if (!rs.next()) { // If the database doesn't exist
-                String createDb = "CREATE DATABASE " + DBNAME + ";";
+        String defaultURL = "jdbc:postgresql://localhost:5432/postgres"; // Connect to 'postgres' initially
+
+        // Check if the database exists
+        String checkDbExists = "SELECT 1 FROM pg_database WHERE datname = '" + DBNAME + "';";
+        try (Connection conn = DriverManager.getConnection(defaultURL, USERNAME, PASSWORD);
+             Statement stmt = conn.createStatement();
+             var rs = stmt.executeQuery(checkDbExists)) {
+
+            if (rs.next()) {
+                System.out.println("Database already exists: " + DBNAME);
+            } else {
+                String createDb = "CREATE DATABASE \"" + DBNAME + "\";";
                 stmt.executeUpdate(createDb);
                 System.out.println("Database created successfully: " + DBNAME);
-            } else {
-                System.out.println("Database already exists: " + DBNAME);
+                Thread.sleep(2000);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Error checking or creating the database.");
+            System.err.println("Error checking or creating the database: " + e.getMessage());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
         }
     }
 

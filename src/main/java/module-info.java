@@ -5,7 +5,9 @@ module com.fl.findthepitch {
     requires com.google.auth;
     requires jbcrypt;
     requires java.sql;
+    requires java.desktop;
 
+    opens com.fl.findthepitch.view to javafx.fxml;
     opens com.fl.findthepitch to javafx.fxml;
     exports com.fl.findthepitch;
     exports com.fl.findthepitch.view;
