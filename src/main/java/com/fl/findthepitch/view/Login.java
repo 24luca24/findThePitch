@@ -56,7 +56,7 @@ public class Login {
                 Stage currentStage = (Stage) login.getScene().getWindow();
                 SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/MapView.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/newMap.fxml"));
                 AnchorPane root = loader.load();
                 Scene newScene = new Scene(root);
 
