@@ -1,5 +1,6 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
 import javafx.fxml.FXML;
@@ -8,12 +9,15 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Registration {
+
+    @FXML
+    private AnchorPane root;
 
     @FXML
     private TextField name;
@@ -36,7 +40,21 @@ public class Registration {
     @FXML
     private Button register;
 
-    dbManager db = new dbManager();;
+    dbManager db = new dbManager();
+
+    @FXML
+    public void initialize() {
+        // Detect swipe right to go back
+        root.setOnSwipeRight(event -> goBack());
+    }
+
+    private void goBack() {
+        Scene previousScene = SceneManager.popScene();
+        if (previousScene != null) {
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.setScene(previousScene);
+        }
+    }
 
     @FXML
     private void sendRegisteredData() {
@@ -64,7 +82,15 @@ public class Registration {
                     password.clear();
 
                     //Go back to the main view after successful registration
-                    switchScene("/MainView.fxml", "Main View", register); // This is assuming the path to your main view is /MainView.fxml
+                    Stage currentStage = (Stage) register.getScene().getWindow();
+                    SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
+
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+                    AnchorPane newRoot = loader.load();
+                    Scene newScene = new Scene(newRoot);
+
+                    currentStage.setScene(newScene);
+                    currentStage.setTitle("Main View");
 
                 } else {
                     System.out.println("User registration failed.");
@@ -74,36 +100,45 @@ public class Registration {
                 System.out.println("Error during registration.");
             }
         } else {
-            // Show errors in an alert if there are any
+            //Show errors in an alert if there are any
             showAlert(errors);
         }
     }
 
     private List<String> checkFields() {
         List<String> errors = new ArrayList<>();
+
         if (this.name.getText().isEmpty()) {
             errors.add("Name field is empty");
         }
         if (this.surname.getText().isEmpty()) {
             errors.add("Surname field is empty");
         }
-        if(this.age.getText().isEmpty() || !checkAgeIsInteger()){ //age not an int
+        if (this.age.getText().isEmpty()) {
             errors.add("Age field is empty");
+        } else if (!checkAgeIsInteger()) {
+            errors.add("Age must be a number");
         }
-        if (this.email.getText().isEmpty() || !checkEmailIsValid()){ //email not valid)
-            errors.add("Email field is empty OR not valid");
+        if (this.email.getText().isEmpty()) {
+            errors.add("Email field is empty");
+        } else if (!checkEmailIsValid()) {
+            errors.add("Invalid email format or domain does not exist");
         }
-        if (this.username.getText().isEmpty() || checkUsernameExist()){ //username not valid
-            errors.add("Username field is empty OR already exists");
+        if (this.username.getText().isEmpty()) {
+            errors.add("Username field is empty");
+        } else if (checkUsernameExist()) { // Check if the username already exists
+            errors.add("Username already exists");
         }
-        if (this.password.getText().isEmpty() || !checkPasswordIsValid()) {
-            errors.add("Password field is empty OR not valid (1 Uppercase letter, 1 special character, 8 characters long)");
+        if (this.password.getText().isEmpty()) {
+            errors.add("Password field is empty");
+        } else if (!checkPasswordIsValid()) {
+            errors.add("Password must have 1 uppercase letter, 1 special character, and be at least 8 characters long");
         }
 
         return errors;
     }
 
-    //SE TRUE AGE E'INTERO
+    //if true age is an integer
     private boolean checkAgeIsInteger() {
         try {
             Integer.parseInt(this.age.getText());
@@ -113,24 +148,39 @@ public class Registration {
         }
     }
 
-    //IF EMAIL MATCHES RETURN TRUE
+    //if email is correct return true
     private boolean checkEmailIsValid() {
         String email = this.email.getText();
         String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
-        return email.matches(emailRegex);
-    }
 
-    //SE TRUE USERNAME GIA ESISTENTE
-    private boolean checkUsernameExist (){
-        String username = this.username.getText();
-        boolean result = db.checkUsername(username);
-        if(result){
-            return true;
+        if (!email.matches(emailRegex)) {
+            return false; //Invalid email format
         }
-        return false;
+
+        //Extract domain from email
+        String domain = email.substring(email.indexOf("@") + 1);
+
+        //Check if domain exists
+        return isDomainValid(domain);
     }
 
-    //IF PASSWORD MATCHES RETURN TRUE
+    //Method to check if a domain is reachable
+    private boolean isDomainValid(String domain) {
+        try {
+            InetAddress.getByName(domain); // Try resolving the domain
+            return true; // If successful, the domain exists
+        } catch (UnknownHostException e) {
+            return false; // Domain does not exist
+        }
+    }
+
+    //If username already exist return true
+    private boolean checkUsernameExist() {
+        return db.checkUsername(this.username.getText()); // Returns true if username already exists
+    }
+
+
+    //If pssword is valid return true
     private boolean checkPasswordIsValid() {
         String password = this.password.getText();
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";
@@ -143,7 +193,7 @@ public class Registration {
         alert.setTitle("Registration Errors");
         alert.setHeaderText("There were some errors with your registration:");
 
-        // Join errors into a single string separated by line breaks
+        //Join errors into a single string separated by line breaks
         StringBuilder errorMessages = new StringBuilder();
         for (String error : errors) {
             errorMessages.append(error).append("\n");
@@ -151,18 +201,6 @@ public class Registration {
 
         alert.setContentText(errorMessages.toString());
         alert.showAndWait();
-    }
-
-    //Centralized method for switching scenes
-    private void switchScene(String fxmlFile, String title, Button button) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-        AnchorPane newRoot = loader.load();
-        Scene newScene = new Scene(newRoot);
-
-        // Get the Stage from the button clicked
-        Stage currentStage = (Stage) button.getScene().getWindow();
-        currentStage.setScene(newScene);
-        currentStage.setTitle(title);
     }
 }
 

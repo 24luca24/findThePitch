@@ -1,5 +1,6 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -49,7 +50,10 @@ public class MainView extends Application {
         AnchorPane newRoot = loader.load();
         Scene newScene = new Scene(newRoot);
 
-        // Get the Stage from the button clicked
+        //Push the current scene to the stack
+        SceneManager.pushScene(button.getScene());
+
+        //Get the Stage from the button clicked
         Stage currentStage = (Stage) button.getScene().getWindow();
         currentStage.setScene(newScene);
         currentStage.setTitle(title);
@@ -58,14 +62,12 @@ public class MainView extends Application {
     //Method for Register Button
     @FXML
     private void goToRegisterPage() throws IOException{
-        System.out.println("Go to Register Page"); //TODO: REMOVE THIS LINE
         switchScene("/Registration.fxml", "Registration", register);
     }
 
     //Method for Login Button
     @FXML
     private void goToLoginPage() throws IOException {
-        System.out.println("Go to Login Page"); //TODO: REMOVE THIS LINE
         switchScene("/Login.fxml", "Login", login);
     }
 

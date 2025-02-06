@@ -88,10 +88,21 @@ public class dbManager {
     }
 
     public boolean checkUsername(String username) {
-        //TODO: query oper cercare utente se esiste true altrimenti false
-        String result = "";//Risultato query
-        return result.equals(username);
+        String query = "SELECT username FROM users WHERE username = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next(); // Returns true if there is a matching username in the DB
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // In case of an error, assume username does not exist
+        }
     }
+
 
     public boolean registerUser(UserData userData) {
         // Store hashed password
@@ -136,6 +147,7 @@ public class dbManager {
         }
     }
 
+    //TODO: If the user registers via Google, their password is null since they don’t need one
     public boolean validateLogin(String username, String enteredPassword) {
         String query = "SELECT password_hash FROM users WHERE username = ?";
 
