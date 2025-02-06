@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.controller.MapViewController">
+   <children>
+      <HBox prefHeight="100.0" prefWidth="400.0">
+         <children>
+            <TextField fx:id="capField" promptText="Insert Cap" />
+            <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchField" text="s" />
+            <ComboBox fx:id="fieldTypeComboBox" prefWidth="150.0" />
+         </children>
+      </HBox>
+      <HBox fx:id="hbox" layoutY="100.0" maxHeight="501.0" maxWidth="400.0" minHeight="500.0" minWidth="400.0" prefHeight="501.0" prefWidth="400.0">
+         <children>
+            <ListView fx:id="listView" maxHeight="501.0" prefHeight="489.0" prefWidth="170.0" />
+            <AnchorPane fx:id="mapContainer" maxHeight="508.0" maxWidth="242.0" minHeight="400.0" minWidth="200.0" prefHeight="501.0" prefWidth="242.0" />
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>

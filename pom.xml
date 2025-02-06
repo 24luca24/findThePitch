@@ -20,6 +20,11 @@
             <id>central</id>
             <url>https://repo.maven.apache.org/maven2</url>
         </repository>
+
+            <repository>
+                <id>gluon-repo</id>
+                <url>https://nexus.gluonhq.com/nexus/content/repositories/releases/</url>
+            </repository>
     </repositories>
 
     <dependencies>
@@ -88,6 +93,43 @@
             <groupId>org.mindrot</groupId>
             <artifactId>jbcrypt</artifactId>
             <version>0.4</version>
+        </dependency>
+        <!-- gluon dependency -->
+        <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>maps</artifactId>
+            <version>2.0.0-ea+5</version>
+        </dependency>
+        <!-- Gluon Charm Glisten - JavaFX UI Components -->
+        <dependency>
+            <groupId>com.gluonhq</groupId>
+            <artifactId>charm-glisten</artifactId>
+            <version>6.0.0</version>  <!-- Use the appropriate version -->
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.attach</groupId>
+            <artifactId>statusbar</artifactId>
+            <version>4.0.11</version> <!-- Replace with the appropriate version if needed -->
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.attach</groupId>
+            <artifactId>util</artifactId>
+            <version>4.0.11</version> <!-- Use the appropriate version if needed -->
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.attach</groupId>
+            <artifactId>device</artifactId>
+            <version>4.0.11</version> <!-- Use the appropriate version if needed -->
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.attach</groupId>
+            <artifactId>display</artifactId>
+            <version>4.0.11</version> <!-- Use the appropriate version if needed -->
+        </dependency>
+        <dependency>
+            <groupId>com.gluonhq.attach</groupId>
+            <artifactId>storage</artifactId>
+            <version>4.0.9</version>  <!-- Use latest version -->
         </dependency>
     </dependencies>
 

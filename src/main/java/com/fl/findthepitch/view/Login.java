@@ -53,16 +53,15 @@ public class Login {
                 username.clear();
                 password.clear();
 
-                //!ENTER into the application
                 Stage currentStage = (Stage) login.getScene().getWindow();
                 SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
-                AnchorPane newRoot = loader.load();
-                Scene newScene = new Scene(newRoot);
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/MapView.fxml"));
+                AnchorPane root = loader.load();
+                Scene newScene = new Scene(root);
 
                 currentStage.setScene(newScene);
-                currentStage.setTitle("Main View");
+                currentStage.setTitle("Map View");
             } else {
                 System.out.println("Invalid username or password.");
             }
