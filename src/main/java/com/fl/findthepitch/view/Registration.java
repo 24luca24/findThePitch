@@ -3,6 +3,7 @@ package com.fl.findthepitch.view;
 import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -39,6 +40,9 @@ public class Registration {
 
     @FXML
     private Button register;
+
+    @FXML
+    private Button back;
 
     dbManager db = new dbManager();
 
@@ -201,6 +205,23 @@ public class Registration {
 
         alert.setContentText(errorMessages.toString());
         alert.showAndWait();
+    }
+
+    public void backToMain() {
+        try {
+            Stage currentStage = (Stage) back.getScene().getWindow();
+            SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+            AnchorPane newRoot = loader.load();
+            Scene newScene = new Scene(newRoot);
+
+            currentStage.setScene(newScene);
+            currentStage.setTitle("Main View");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error during switching scenes.");
+        }
     }
 }
 

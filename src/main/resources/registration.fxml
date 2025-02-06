@@ -15,7 +15,7 @@
             <Image url="@images/registration.jpg" />
          </image>
       </ImageView>
-      <VBox fx:id="vBox" layoutX="49.0" layoutY="68.0" prefHeight="314.0" prefWidth="149.0">
+      <VBox fx:id="vBox" layoutX="126.0" layoutY="164.0" prefHeight="176.0" prefWidth="149.0">
          <children>
             <TextField fx:id="name" promptText="name" />
             <TextField fx:id="surname" promptText="surname" />
@@ -25,6 +25,7 @@
             <PasswordField fx:id="password" promptText="password" />
          </children>
       </VBox>
-      <Button fx:id="register" layoutX="87.0" layoutY="428.0" mnemonicParsing="false" onAction="#sendRegisteredData" prefHeight="31.0" prefWidth="74.0" text="Register" />
+      <Button fx:id="register" layoutX="238.0" layoutY="379.0" mnemonicParsing="false" onAction="#sendRegisteredData" prefHeight="31.0" prefWidth="74.0" text="Register" />
+      <Button fx:id="back" layoutX="89.0" layoutY="379.0" mnemonicParsing="false" onAction="#backToMain" prefHeight="31.0" prefWidth="74.0" text="Back" />
    </children>
 </AnchorPane>

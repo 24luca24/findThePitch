@@ -22,12 +22,12 @@
         <!-- Scroll Pane for ListView and MapView -->
         <ScrollPane fx:id="scrollPane" layoutY="65.0" prefHeight="535.0" prefWidth="400.0">
             <content>
-                <VBox prefHeight="600.0" prefWidth="400.0" spacing="10">
+                <VBox prefHeight="521.0" prefWidth="400.0" spacing="10">
                     <!-- Scrollable ListView -->
-                    <ListView fx:id="list" prefHeight="154.0" prefWidth="400.0" />
+                    <ListView fx:id="list" prefHeight="151.0" prefWidth="325.0" />
 
                     <!-- Scrollable MapView -->
-                    <AnchorPane fx:id="mapContainer" prefHeight="380.0" prefWidth="400.0">
+                    <AnchorPane fx:id="mapContainer" prefHeight="363.0" prefWidth="247.0">
                         <!-- The MapView will be placed here dynamically in the controller -->
                     </AnchorPane>
                 </VBox>

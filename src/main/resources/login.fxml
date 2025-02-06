@@ -16,6 +16,7 @@
       </ImageView>
       <TextField fx:id="username" layoutX="120.0" layoutY="235.0" promptText="username" />
       <PasswordField fx:id="password" layoutX="120.0" layoutY="287.0" promptText="password" />
-      <Button fx:id="login" layoutX="176.0" layoutY="347.0" mnemonicParsing="false" onAction="#sendLoginData" text="Login" />
+      <Button fx:id="login" layoutX="243.0" layoutY="351.0" mnemonicParsing="false" onAction="#sendLoginData" prefHeight="31.0" prefWidth="74.0" text="Login" />
+      <Button fx:id="back" layoutX="83.0" layoutY="351.0" mnemonicParsing="false" onAction="#backToMain" prefHeight="31.0" prefWidth="74.0" text="Back" />
    </children>
 </AnchorPane>

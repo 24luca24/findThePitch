@@ -2,6 +2,7 @@ package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -24,6 +25,9 @@ public class Login {
 
     @FXML
     private Button login;
+
+    @FXML
+    private Button back;
 
     @FXML
     public void initialize() {
@@ -68,6 +72,22 @@ public class Login {
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error during login.");
+        }
+    }
+
+    public void backToMain() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+            AnchorPane newRoot = loader.load();
+            Scene newScene = new Scene(newRoot);
+
+            Stage currentStage = (Stage) back.getScene().getWindow();
+            currentStage.setScene(newScene);
+            currentStage.setTitle("Main View");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error during switching scenes.");
         }
     }
 }
