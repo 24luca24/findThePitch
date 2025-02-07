@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -68,6 +69,7 @@ public class Login {
                 currentStage.setTitle("Map View");
             } else {
                 System.out.println("Invalid username or password.");
+                new Alert(Alert.AlertType.ERROR, "Invalid username or password.").show();
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -38,9 +38,17 @@ public class NewMapController {
         //Initialize the ListView with some items
         listView.getItems().addAll("Item 1", "Item 2", "Item 3");
 
-        //fill the comboBox with type of field
+        //Fill the comboBox with type of field
         fillExpansionPanelContainer();
 
+        //Initialize the map
+        setMap();
+
+        //Handle search button click
+//        searchButton.setOnAction(e -> searchField());
+    }
+
+    private void setMap() {
         //Initialize MapView and add it to the mapContainer.
         MapView mapView = new MapView();
         mapView.setCenter(37.7749, -122.4194); // Example: San Francisco
@@ -57,11 +65,7 @@ public class NewMapController {
         mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) ->
                 mapView.setPrefHeight(newHeight.doubleValue())
         );
-
-        //Handle search button click
-        searchButton.setOnAction(e -> searchField());
     }
-
     private void fillExpansionPanelContainer() {
         comboBox.getItems().addAll(FieldType.values());
 
@@ -78,6 +82,6 @@ public class NewMapController {
     private void searchField() {
         System.out.println("Search button clicked!");
         // Example: add a new item to the ListView on search
-        Platform.runLater(() -> listView.getItems().add("New Search Result"));
+        //Platform.runLater(() -> listView.getItems().add("New Search Result"));
     }
 }
