@@ -20,7 +20,7 @@
             <TextField fx:id="name" promptText="name" />
             <TextField fx:id="surname" promptText="surname" />
             <TextField fx:id="email" promptText="email" />
-            <TextField fx:id="city" promptText="age" />
+            <TextField fx:id="city" promptText="city" />
             <TextField fx:id="username" promptText="username" />
             <PasswordField fx:id="password" promptText="password" />
          </children>

@@ -3,7 +3,7 @@ package com.fl.findthepitch.view;
 import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
-import javafx.event.ActionEvent;
+import org.controlsfx.control.textfield.TextFields;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -217,6 +217,11 @@ public class Registration {
             e.printStackTrace();
             System.out.println("Error during switching scenes.");
         }
+    }
+
+    private void autoCompletionCity(){
+        List<String> cityNames = db.getCityNames();
+        TextField.bindAutoCompletion(city, cityNames);
     }
 }
 

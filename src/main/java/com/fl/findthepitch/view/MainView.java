@@ -5,6 +5,7 @@ import com.fl.findthepitch.controller.dbManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -33,7 +34,9 @@ public class MainView extends Application {
         db.createPitchTable();
 
         db.createMunicipalityTable();
-        db.uploadDataFromCSV("/src/main/java/resources/CitiesCoordinates/gi_comuni_cap.csv");
+        //insert path to gi_comuni_cap.csv
+        String filePath = getClass().getResource("/CitiesCoordinates/gi_comuni_cap.csv").getPath();
+        db.uploadDataFromCSV(filePath);
 
         //Load FXML file and set the scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));

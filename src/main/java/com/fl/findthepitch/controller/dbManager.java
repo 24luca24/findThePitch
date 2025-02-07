@@ -8,7 +8,12 @@ import com.fl.findthepitch.model.UserData;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * This class is responsible for managing the database.So we can add queries here.
@@ -36,7 +41,7 @@ public class dbManager {
                     id SERIAL PRIMARY KEY,
                     name VARCHAR(50) NOT NULL,
                     surname VARCHAR(50) NOT NULL,
-                    age INTEGER NOT NULL,
+                    city VARCHAR(200) NOT NULL,
                     username VARCHAR(50) UNIQUE NOT NULL,
                     email VARCHAR(255) NOT NULL,
                     password_hash TEXT NOT NULL,
@@ -81,72 +86,34 @@ public class dbManager {
 
     public void createMunicipalityTable() {
         String createTableSQL = """
-            CREATE TABLE IF NOT EXISTS municipalities (
-                codice_istat INTEGER PRIMARY KEY,
-                denominazione_ita VARCHAR(255) NOT NULL,
-                denominazione_altra VARCHAR(255),
-                cap VARCHAR(10),
-                sigla_provincia VARCHAR(10),
-                denominazione_provincia VARCHAR(255),
-                tipologia_provincia VARCHAR(255),
-                codice_regione INTEGER,
-                denominazione_regione VARCHAR(255),
-                tipologia_regione VARCHAR(255),
-                ripartizione_geografica VARCHAR(255),
-                flag_capoluogo VARCHAR(10),
-                codice_belfiore VARCHAR(10),
-                lat DECIMAL(10,7),
-                lon DECIMAL(10,7),
-                superficie_kmq DECIMAL(10,4)
-            );
-        """;
+        CREATE TABLE IF NOT EXISTS municipalities (
+            codice_istat VARCHAR(200) PRIMARY KEY,
+            denominazione_ita VARCHAR(255) NOT NULL,
+            denominazione_altra VARCHAR(255),
+            cap VARCHAR(100),
+            sigla_provincia VARCHAR(100),
+            denominazione_provincia VARCHAR(255),
+            tipologia_provincia VARCHAR(255),
+            codice_regione VARCHAR(200),
+            denominazione_regione VARCHAR(255),
+            tipologia_regione VARCHAR(255),
+            ripartizione_geografica VARCHAR(255),
+            flag_capoluogo VARCHAR(100),
+            codice_belfiore VARCHAR(100),
+            lat VARCHAR(200),
+            lon VARCHAR(200),
+            superficie_kmq VARCHAR(200)
+        );
+    """;
         executeUpdate(createTableSQL, "Municipality Table");
-
     }
 
 
-    public void uploadDataFromCSV(String filePath) {
-
-
-        String insertSQL = """
-            INSERT INTO municipalities (
-                codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
-                denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
-                tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        """;
-
-        try (PreparedStatement pstmt = connection.prepareStatement(insertSQL);
-             BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-
-            String line;
-            br.readLine(); // Skip header
-            while ((line = br.readLine()) != null) {
-                String[] values = line.split(";");
-                pstmt.setInt(1, Integer.parseInt(values[0]));
-                pstmt.setString(2, values[1]);
-                pstmt.setString(3, values[2].isEmpty() ? null : values[2]);
-                pstmt.setString(4, values[3]);
-                pstmt.setString(5, values[4]);
-                pstmt.setString(6, values[5]);
-                pstmt.setString(7, values[6]);
-                pstmt.setInt(8, Integer.parseInt(values[7]));
-                pstmt.setString(9, values[8]);
-                pstmt.setString(10, values[9]);
-                pstmt.setString(11, values[10]);
-                pstmt.setString(12, values[11]);
-                pstmt.setString(13, values[12]);
-                pstmt.setDouble(14, Double.parseDouble(values[13].replace(",", ".")));
-                pstmt.setDouble(15, Double.parseDouble(values[14].replace(",", ".")));
-                pstmt.setDouble(16, Double.parseDouble(values[15].replace(",", ".")));
-                pstmt.executeUpdate();
-            }
-            System.out.println("Data uploaded successfully.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    private double parseDouble(String value) {
+        if (value == null || value.trim().isEmpty()) return 0.0;
+        return Double.parseDouble(value.replace(",", "."));
     }
+
 
     //Helper method to execute table creation
     private void executeUpdate(String query, String tableName) {
@@ -173,7 +140,6 @@ public class dbManager {
             return false; // In case of an error, assume username does not exist
         }
     }
-
 
     public boolean registerUser(UserData userData) {
         // Store hashed password
@@ -253,4 +219,87 @@ public class dbManager {
             return false; // In case of an error, assume city does not exist
         }
     }
+
+    public void uploadDataFromCSV(String filePath) {
+        String insertSQL = """
+        INSERT INTO municipalities (
+            codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
+            denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
+            tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT (codice_istat) DO NOTHING
+    """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(insertSQL);
+             BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+
+            String line;
+            br.readLine(); // Skip header
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";", -1); // -1 to keep empty values
+
+                // Safe assignment, keeping nulls for empty values
+                String codiceIstat = values[0];  // codice_istat as string
+                String denominazioneIta = values[1];
+                String denominazioneAltra = values[2].isEmpty() ? null : values[2];
+                String cap = values[3];
+                String siglaProvincia = values[4];
+                String denominazioneProvincia = values[5];
+                String tipologiaProvincia = values[6];
+                String codiceRegione = values[7]; // codice_regione as string
+                String denominazioneRegione = values[8];
+                String tipologiaRegione = values[9];
+                String ripartizioneGeografica = values[10];
+                String flagCapoluogo = values[11];
+                String codiceBelfiore = values[12];
+                String lat = values[13];  // lat as string
+                String lon = values[14];  // lon as string
+                String superficieKmq = values[15];  // superficie_kmq as string
+
+                // Set prepared statement parameters
+                pstmt.setString(1, codiceIstat);
+                pstmt.setString(2, denominazioneIta);
+                pstmt.setString(3, denominazioneAltra);
+                pstmt.setString(4, cap);
+                pstmt.setString(5, siglaProvincia);
+                pstmt.setString(6, denominazioneProvincia);
+                pstmt.setString(7, tipologiaProvincia);
+                pstmt.setString(8, codiceRegione);
+                pstmt.setString(9, denominazioneRegione);
+                pstmt.setString(10, tipologiaRegione);
+                pstmt.setString(11, ripartizioneGeografica);
+                pstmt.setString(12, flagCapoluogo);
+                pstmt.setString(13, codiceBelfiore);
+                pstmt.setString(14, lat);
+                pstmt.setString(15, lon);
+                pstmt.setString(16, superficieKmq);
+
+                pstmt.executeUpdate();
+            }
+            System.out.println("Data uploaded successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<String> getCityNames() {
+        String query = "SELECT denominazione_ita FROM municipalities WHERE denominazione_ita IS NOT NULL";
+        List<String> cityNames = new ArrayList<>();
+
+        try (Statement stmt = connection.createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+
+            // Iterate over the result set and add city names to the list
+            while (rs.next()) {
+                String cityName = rs.getString("denominazione_ita");
+                cityNames.add(cityName);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return cityNames;
+    }
+
 }

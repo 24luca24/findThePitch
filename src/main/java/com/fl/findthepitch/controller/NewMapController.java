@@ -2,7 +2,6 @@ package com.fl.findthepitch.controller;
 
 import com.fl.findthepitch.model.fieldTypeInformation.FieldType;
 import com.gluonhq.maps.MapView;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
@@ -33,6 +32,8 @@ public class NewMapController {
     @FXML
     private Button searchButton;
 
+    MapView mapView;
+
     public void initialize() {
 
         //Initialize the ListView with some items
@@ -45,14 +46,13 @@ public class NewMapController {
         setMap();
 
         //Handle search button click
-//        searchButton.setOnAction(e -> searchField());
+        //searchButton.setOnAction(e -> searchField());
     }
 
     private void setMap() {
-        //Initialize MapView and add it to the mapContainer.
-        MapView mapView = new MapView();
+        mapView = new MapView();
         mapView.setCenter(45.53333,  9.2); // Example: Gorla Minore
-        mapView.setZoom(20);
+        mapView.setZoom(15);
 
         //Set the map's size to match its container
         mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
@@ -66,6 +66,7 @@ public class NewMapController {
                 mapView.setPrefHeight(newHeight.doubleValue())
         );
     }
+
     private void fillExpansionPanelContainer() {
         comboBox.getItems().addAll(FieldType.values());
 
@@ -83,5 +84,9 @@ public class NewMapController {
         System.out.println("Search button clicked!");
         // Example: add a new item to the ListView on search
         //Platform.runLater(() -> listView.getItems().add("New Search Result"));
+    }
+
+    private void getUserPosition() {
+
     }
 }
