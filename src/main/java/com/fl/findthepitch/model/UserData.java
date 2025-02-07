@@ -58,7 +58,7 @@ public class UserData {
         return hashPassword;
     }
 
-    public String getAge() {
+    public String getCity() {
         return city;
     }
 

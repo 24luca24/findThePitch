@@ -32,6 +32,9 @@ public class MainView extends Application {
         db.createUserTable();
         db.createPitchTable();
 
+        db.createMunicipalityTable();
+        db.uploadDataFromCSV("/src/main/java/resources/CitiesCoordinates/gi_comuni_cap.csv");
+
         //Load FXML file and set the scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
         AnchorPane root = loader.load();

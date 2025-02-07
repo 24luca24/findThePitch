@@ -6,6 +6,8 @@ import com.fl.findthepitch.model.Database;
 import com.fl.findthepitch.model.PasswordUtils;
 import com.fl.findthepitch.model.UserData;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.sql.*;
 
 /**
@@ -77,6 +79,75 @@ public class dbManager {
         executeUpdate(createTableSQL, "Pitch Table");
     }
 
+    public void createMunicipalityTable() {
+        String createTableSQL = """
+            CREATE TABLE IF NOT EXISTS municipalities (
+                codice_istat INTEGER PRIMARY KEY,
+                denominazione_ita VARCHAR(255) NOT NULL,
+                denominazione_altra VARCHAR(255),
+                cap VARCHAR(10),
+                sigla_provincia VARCHAR(10),
+                denominazione_provincia VARCHAR(255),
+                tipologia_provincia VARCHAR(255),
+                codice_regione INTEGER,
+                denominazione_regione VARCHAR(255),
+                tipologia_regione VARCHAR(255),
+                ripartizione_geografica VARCHAR(255),
+                flag_capoluogo VARCHAR(10),
+                codice_belfiore VARCHAR(10),
+                lat DECIMAL(10,7),
+                lon DECIMAL(10,7),
+                superficie_kmq DECIMAL(10,4)
+            );
+        """;
+        executeUpdate(createTableSQL, "Municipality Table");
+
+    }
+
+
+    public void uploadDataFromCSV(String filePath) {
+
+
+        String insertSQL = """
+            INSERT INTO municipalities (
+                codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
+                denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
+                tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(insertSQL);
+             BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+
+            String line;
+            br.readLine(); // Skip header
+            while ((line = br.readLine()) != null) {
+                String[] values = line.split(";");
+                pstmt.setInt(1, Integer.parseInt(values[0]));
+                pstmt.setString(2, values[1]);
+                pstmt.setString(3, values[2].isEmpty() ? null : values[2]);
+                pstmt.setString(4, values[3]);
+                pstmt.setString(5, values[4]);
+                pstmt.setString(6, values[5]);
+                pstmt.setString(7, values[6]);
+                pstmt.setInt(8, Integer.parseInt(values[7]));
+                pstmt.setString(9, values[8]);
+                pstmt.setString(10, values[9]);
+                pstmt.setString(11, values[10]);
+                pstmt.setString(12, values[11]);
+                pstmt.setString(13, values[12]);
+                pstmt.setDouble(14, Double.parseDouble(values[13].replace(",", ".")));
+                pstmt.setDouble(15, Double.parseDouble(values[14].replace(",", ".")));
+                pstmt.setDouble(16, Double.parseDouble(values[15].replace(",", ".")));
+                pstmt.executeUpdate();
+            }
+            System.out.println("Data uploaded successfully.");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
     //Helper method to execute table creation
     private void executeUpdate(String query, String tableName) {
         try (Statement stmt = connection.createStatement()) {
@@ -119,7 +190,7 @@ public class dbManager {
                 pstmt.setString(3, userData.getUsername());
                 pstmt.setString(4, userData.getMail());
                 pstmt.setString(5, hashedPassword);
-                pstmt.setInt(6, userData.getAge());
+                pstmt.setString(6, userData.getCity());
                 pstmt.setString(7, userData.getGoogleID());
 
                 int affectedRows = pstmt.executeUpdate();
