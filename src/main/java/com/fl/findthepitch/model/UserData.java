@@ -7,17 +7,17 @@ public class UserData {
     private String username;
     private String email;
     private String hashPassword;
-    private Integer age;
+    private String city;
     private String googleID;
 
     //Constructor using mail and password
-    public UserData(String name, String surname, String username, String email, String hashPassword, Integer age) {
+    public UserData(String name, String surname, String username, String email, String hashPassword, String city) {
         this.name = name;
         this.surname = surname;
         this.username = username;
         this.email = email;
         this.hashPassword = hashPassword;
-        this.age = age;
+        this.city = city;
         this.googleID = null;
     }
 
@@ -28,7 +28,7 @@ public class UserData {
         this.username = username;
         this.email = email;
         this.hashPassword = null;
-        this.age = age;
+        this.city = city;
         this.googleID = googleID;
     }
 
@@ -58,8 +58,8 @@ public class UserData {
         return hashPassword;
     }
 
-    public int getAge() {
-        return age;
+    public String getAge() {
+        return city;
     }
 
     public String getGoogleID() {
@@ -86,8 +86,8 @@ public class UserData {
         this.hashPassword = hashPassword;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public void setAge(String city) {
+        this.city = city;
     }
 
     public void setGoogleID(String googleID) {

@@ -166,4 +166,20 @@ public class dbManager {
         //If not found
         return false;
     }
+
+    public boolean checkCity(String text) {
+        String query = "SELECT city FROM pitch WHERE city = ?";
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setString(1, text);
+            ResultSet rs = stmt.executeQuery();
+
+            return rs.next(); // Returns true if there is a matching city in the DB
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false; // In case of an error, assume city does not exist
+        }
+    }
 }

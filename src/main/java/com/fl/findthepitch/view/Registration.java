@@ -30,7 +30,7 @@ public class Registration {
     private TextField email;
 
     @FXML
-    private TextField age;
+    private TextField city;
 
     @FXML
     private TextField username;
@@ -71,19 +71,19 @@ public class Registration {
                         username.getText(),
                         email.getText(),
                         password.getText(),
-                        Integer.parseInt(age.getText())
+                        city.getText()
                 );
 
                 if (db.registerUser(userData)) {
                     System.out.println("User registered successfully.");
 
                     //Clear all the text fields
-                    name.clear();
-                    surname.clear();
-                    email.clear();
-                    age.clear();
-                    username.clear();
-                    password.clear();
+                    this.name.clear();
+                    this.surname.clear();
+                    this.email.clear();
+                    this.city.clear();
+                    this.username.clear();
+                    this.password.clear();
 
                     //Go back to the main view after successful registration
                     Stage currentStage = (Stage) register.getScene().getWindow();
@@ -118,10 +118,10 @@ public class Registration {
         if (this.surname.getText().isEmpty()) {
             errors.add("Surname field is empty");
         }
-        if (this.age.getText().isEmpty()) {
-            errors.add("Age field is empty");
-        } else if (!checkAgeIsInteger()) {
-            errors.add("Age must be a number");
+        if (this.city.getText().isEmpty()) {
+            errors.add("City field is empty");
+        } else if (!checkCityExist()) {
+            errors.add("City does not exist");
         }
         if (this.email.getText().isEmpty()) {
             errors.add("Email field is empty");
@@ -142,14 +142,9 @@ public class Registration {
         return errors;
     }
 
-    //if true age is an integer
-    private boolean checkAgeIsInteger() {
-        try {
-            Integer.parseInt(this.age.getText());
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
-        }
+    //if true age exist
+    private boolean checkCityExist() {
+        return db.checkCity(this.city.getText());
     }
 
     //if email is correct return true
@@ -184,7 +179,7 @@ public class Registration {
     }
 
 
-    //If pssword is valid return true
+    //If password is valid return true
     private boolean checkPasswordIsValid() {
         String password = this.password.getText();
         String passwordRegex = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*(),.?\":{}|<>]).{8,}$";

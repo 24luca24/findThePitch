@@ -51,8 +51,8 @@ public class NewMapController {
     private void setMap() {
         //Initialize MapView and add it to the mapContainer.
         MapView mapView = new MapView();
-        mapView.setCenter(37.7749, -122.4194); // Example: San Francisco
-        mapView.setZoom(10);
+        mapView.setCenter(45.53333,  9.2); // Example: Gorla Minore
+        mapView.setZoom(20);
 
         //Set the map's size to match its container
         mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
