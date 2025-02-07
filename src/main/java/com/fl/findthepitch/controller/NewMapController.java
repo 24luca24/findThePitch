@@ -6,7 +6,6 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.VBox;
 
 public class NewMapController {
 
@@ -14,65 +13,71 @@ public class NewMapController {
     private AnchorPane mapContainer;
 
     @FXML
-    private ListView<String> list;
+    private ListView<String> listView;
 
     @FXML
     private ScrollPane scrollPane;
 
     @FXML
-    private TextField textField;
+    private TextField textFieldInsert;
 
     @FXML
-    private ComboBox<FieldType> fieldTypeComboBox;
+    private ComboBox<FieldType> comboBox;
 
     @FXML
     private AnchorPane root;
 
     @FXML
-    private AnchorPane fixedBar;
+    private AnchorPane searchbar;
 
     @FXML
-    private Button buttonSearch;
+    private Button searchButton;
 
     public void initialize() {
-        //Initialize the ListView with items
-        list.getItems().addAll("Item 1", "Item 2", "Item 3");
 
+        //Initialize the ListView with some items
+        listView.getItems().addAll("Item 1", "Item 2", "Item 3");
+
+        //fill the comboBox with type of field
         fillExpansionPanelContainer();
 
-        //Initialize MapView and add it to the mapContainer
+        //Initialize MapView and add it to the mapContainer.
         MapView mapView = new MapView();
-        mapView.setCenter(37.7749, -122.4194); // Example coordinates (San Francisco)
+        mapView.setCenter(37.7749, -122.4194); // Example: San Francisco
         mapView.setZoom(10);
-        mapView.setPrefSize(mapContainer.getWidth(), 380.0); // Set map height to match container height
+
+        //Set the map's size to match its container
+        mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
         mapContainer.getChildren().add(mapView);
 
-        //Adjust MapView size based on container size changes
-        mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) -> {
-            mapView.setPrefWidth(newWidth.doubleValue());
-        });
-        mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) -> {
-            mapView.setPrefHeight(newHeight.doubleValue());
-        });
+        //Adjust MapView size if the container size changes
+        mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
+                mapView.setPrefWidth(newWidth.doubleValue())
+        );
+        mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) ->
+                mapView.setPrefHeight(newHeight.doubleValue())
+        );
 
-        //Platform.runLater(() -> mapContainer.getChildren().add(mapView));
         //Handle search button click
-        buttonSearch.setOnAction(e -> searchField());
+        searchButton.setOnAction(e -> searchField());
     }
 
     private void fillExpansionPanelContainer() {
-        fieldTypeComboBox.getItems().addAll(FieldType.values());
+        comboBox.getItems().addAll(FieldType.values());
 
         //Handle ComboBox selection
-        fieldTypeComboBox.setOnAction(e -> {
-            FieldType selectedType = (FieldType) fieldTypeComboBox.getValue();
+        comboBox.setOnAction(e -> {
+            FieldType selectedType = comboBox.getValue();
             System.out.println("Selected: " + selectedType);
         });
+
+        comboBox.setValue(FieldType.FOOTBALL);
     }
 
     @FXML
     private void searchField() {
         System.out.println("Search button clicked!");
-        Platform.runLater(() -> list.getItems().add("New Search Result"));
+        // Example: add a new item to the ListView on search
+        Platform.runLater(() -> listView.getItems().add("New Search Result"));
     }
 }

@@ -6,32 +6,25 @@
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.controller.NewMapController">
-    <children>
-        <!-- Fixed search bar -->
-        <AnchorPane fx:id="fixedBar" prefHeight="65.0" prefWidth="400.0">
-            <children>
-                <Button fx:id="buttonSearch" layoutX="173.0" layoutY="21.0" mnemonicParsing="false" text="Search" />
-                <ComboBox fx:id="fieldTypeComboBox" layoutX="236.0" layoutY="21.0" prefWidth="150.0" />
-                <TextField fx:id="textField" layoutX="12.0" layoutY="22.0" promptText="zipCode" />
-            </children>
-        </AnchorPane>
-
-        <!-- Scroll Pane for ListView and MapView -->
-        <ScrollPane fx:id="scrollPane" layoutY="65.0" prefHeight="535.0" prefWidth="400.0">
-            <content>
-                <VBox prefHeight="521.0" prefWidth="400.0" spacing="10">
-                    <!-- Scrollable ListView -->
-                    <ListView fx:id="list" prefHeight="151.0" prefWidth="325.0" />
-
-                    <!-- Scrollable MapView -->
-                    <AnchorPane fx:id="mapContainer" prefHeight="363.0" prefWidth="247.0">
-                        <!-- The MapView will be placed here dynamically in the controller -->
-                    </AnchorPane>
-                </VBox>
-            </content>
-        </ScrollPane>
-    </children>
+<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.controller.NewMapController">
+   <children>
+      <AnchorPane fx:id="searchBar" maxHeight="60.0" maxWidth="400.0" minHeight="60.0" minWidth="400.0" prefHeight="60.0" prefWidth="400.0">
+         <children>
+            <TextField fx:id="textFieldInsert" layoutX="14.0" layoutY="18.0" promptText="City" />
+            <Button fx:id="searchButton" layoutX="174.0" layoutY="18.0" mnemonicParsing="false" onAction="#searchField" text="Search" />
+            <ComboBox fx:id="comboBox" layoutX="236.0" layoutY="19.0" prefWidth="150.0" />
+         </children>
+      </AnchorPane>
+      <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" layoutY="60.0" prefHeight="150.0" prefWidth="400.0">
+        <content>
+          <AnchorPane fx:id="listViewContainer" minHeight="0.0" minWidth="0.0" prefHeight="150.0" prefWidth="400.0">
+               <children>
+                  <ListView fx:id="listView" prefHeight="150.0" prefWidth="400.0" />
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
+      <AnchorPane fx:id="mapContainer" layoutY="210.0" prefHeight="390.0" prefWidth="400.0" />
+   </children>
 </AnchorPane>
