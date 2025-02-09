@@ -144,7 +144,7 @@ public class Registration {
 
     //if true age exist
     private boolean checkCityExist() {
-        return db.checkCity(this.city.getText());
+        return db.checkCity(this.city.getText().trim());
     }
 
     //if email is correct return true

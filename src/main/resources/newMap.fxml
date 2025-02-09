@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="400.0" stylesheets="@styles/new_map.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.controller.NewMapController">
+<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="400.0" stylesheets="@styles/new_map.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.controller.NewMapController">
     <children>
         <!-- Title -->
         <Label layoutX="14.0" layoutY="10.0" styleClass="title-label" text="Find a Pitch" />

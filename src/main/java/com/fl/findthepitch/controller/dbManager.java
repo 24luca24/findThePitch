@@ -205,20 +205,27 @@ public class dbManager {
     }
 
     public boolean checkCity(String text) {
-        String query = "SELECT city FROM pitch WHERE city = ?";
+        String query = "SELECT 1 FROM municipalities WHERE denominazione_ita = ? LIMIT 1"; // More efficient
 
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-
             stmt.setString(1, text);
-            ResultSet rs = stmt.executeQuery();
-
-            return rs.next(); // Returns true if there is a matching city in the DB
-
+            try (ResultSet rs = stmt.executeQuery()) {
+                return rs.next(); // Returns true if city exists
+            }
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; // In case of an error, assume city does not exist
+            return false; // Assume city does not exist in case of an error
         }
     }
+
+
+    private String removeQuotes(String value) {
+        if (value != null && value.startsWith("\"") && value.endsWith("\"")) {
+            return value.substring(1, value.length() - 1);
+        }
+        return value;
+    }
+
 
     public void uploadDataFromCSV(String filePath) {
         String insertSQL = """
@@ -240,21 +247,21 @@ public class dbManager {
 
                 // Safe assignment, keeping nulls for empty values
                 String codiceIstat = values[0];  // codice_istat as string
-                String denominazioneIta = values[1];
-                String denominazioneAltra = values[2].isEmpty() ? null : values[2];
-                String cap = values[3];
-                String siglaProvincia = values[4];
-                String denominazioneProvincia = values[5];
-                String tipologiaProvincia = values[6];
-                String codiceRegione = values[7]; // codice_regione as string
-                String denominazioneRegione = values[8];
-                String tipologiaRegione = values[9];
-                String ripartizioneGeografica = values[10];
-                String flagCapoluogo = values[11];
-                String codiceBelfiore = values[12];
-                String lat = values[13];  // lat as string
-                String lon = values[14];  // lon as string
-                String superficieKmq = values[15];  // superficie_kmq as string
+                String denominazioneIta = removeQuotes(values[1]);
+                String denominazioneAltra = values[2].isEmpty() ? null : removeQuotes(values[2]);
+                String cap = removeQuotes(values[3]);
+                String siglaProvincia = removeQuotes(values[4]);
+                String denominazioneProvincia = removeQuotes(values[5]);
+                String tipologiaProvincia = removeQuotes(values[6]);
+                String codiceRegione = removeQuotes(values[7]);
+                String denominazioneRegione = removeQuotes(values[8]);
+                String tipologiaRegione = removeQuotes(values[9]);
+                String ripartizioneGeografica = removeQuotes(values[10]);
+                String flagCapoluogo = removeQuotes(values[11]);
+                String codiceBelfiore = removeQuotes(values[12]);
+                String lat = removeQuotes(values[13]);
+                String lon = removeQuotes(values[14]);
+                String superficieKmq = removeQuotes(values[15]);
 
                 // Set prepared statement parameters
                 pstmt.setString(1, codiceIstat);
