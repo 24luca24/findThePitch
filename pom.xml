@@ -148,6 +148,15 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                    <!-- Non funzia l'accesso al register se no QUINDI DA FIXARE!!!!
+                    DEVI FARE QUESTA COSA SU INTELLIJ:
+                    VAI SU: Run > Edit Configurations.
+                    fai modify options (dovrebbe essere in azzurrino) e fai schiaccia su add VM options.
+                    In VM Options field, aggiungi:
+                    - -add-opens javafx.base/com.sun.javafx.event=org.controlsfx.controls
+                    le due linette iniziali vanno atttaccate ma non me lo fa fare:
+                    FAI Apply e ok poi runna.
+                    -->
                     <compilerArgs>
                         <arg>--add-opens</arg>
                         <arg>javafx.base/com.sun.javafx.event=org.controlsfx.controls</arg>
