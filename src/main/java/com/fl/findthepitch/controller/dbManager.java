@@ -145,7 +145,7 @@ public class dbManager {
         // Store hashed password
         String hashedPassword = PasswordUtils.hashPassword(userData.getHashPassword()); // Ensure hashing before storing
 
-        String insertUserSQL = "INSERT INTO users (name, surname, username, email, password_hash, age, google_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        String insertUserSQL = "INSERT INTO users (name, surname, username, email, password_hash, city, google_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
 
         try {
             connection.setAutoCommit(false);

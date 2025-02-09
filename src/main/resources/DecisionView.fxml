@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" stylesheets="@styles/decisionStyle.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.UserView">
+
+
+   <ImageView fitHeight="625.0" fitWidth="913.0" layoutX="-366.0" layoutY="-4.0" opacity="0.75" pickOnBounds="true" preserveRatio="true">
+      <Image url="@images/decision.jpg" />
+   </ImageView>
+   <Button fx:id="search" layoutX="112.0" layoutY="201.0" mnemonicParsing="false" onAction="#goTonewMap" prefHeight="77.0" prefWidth="177.0" styleClass="main-button" text="SEARCH 🔎">
+      <font>
+         <Font name="Baloo 2 SemiBold" size="18.0" />
+      </font>
+   </Button>
+
+   <Button fx:id="settings" layoutX="343.0" layoutY="-6.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="59.0" styleClass="settings-button" text="⚙️">
+      <font>
+         <Font size="36.0" />
+      </font>
+   </Button>
+
+   <Button fx:id="add" layoutX="112.0" layoutY="323.0" mnemonicParsing="false" prefHeight="77.0" prefWidth="177.0" styleClass="main-button" text="ADD 📍">
+      <font>
+         <Font name="Baloo Bhai 2 Bold" size="18.0" />
+      </font>
+   </Button>
+</AnchorPane>

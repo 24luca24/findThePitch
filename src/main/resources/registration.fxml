@@ -8,24 +8,28 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="root" maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.Registration">
+<AnchorPane fx:id="root" maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" stylesheets="@styles/login.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.Registration"> <!-- Link to the Login CSS file for shared styles -->
    <children>
-      <ImageView fitHeight="600.0" fitWidth="400.0" pickOnBounds="true">
+      <!-- Background image with opacity -->
+      <ImageView fitHeight="616.0" fitWidth="484.0" layoutX="-25.0" layoutY="-11.0" opacity="0.75" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@images/registration.jpg" />
          </image>
       </ImageView>
-      <VBox fx:id="vBox" layoutX="126.0" layoutY="164.0" prefHeight="176.0" prefWidth="149.0">
-         <children>
-            <TextField fx:id="name" promptText="name" />
-            <TextField fx:id="surname" promptText="surname" />
-            <TextField fx:id="email" promptText="email" />
-            <TextField fx:id="city" promptText="city" />
-            <TextField fx:id="username" promptText="username" />
-            <PasswordField fx:id="password" promptText="password" />
-         </children>
-      </VBox>
-      <Button fx:id="register" layoutX="238.0" layoutY="379.0" mnemonicParsing="false" onAction="#sendRegisteredData" prefHeight="31.0" prefWidth="74.0" text="Register" />
-      <Button fx:id="back" layoutX="89.0" layoutY="379.0" mnemonicParsing="false" onAction="#backToMain" prefHeight="31.0" prefWidth="74.0" text="Back" />
+
+      <!-- VBox for input fields with spacing and layout adjustments -->
+      <VBox fx:id="vBox" layoutX="126.0" layoutY="164.0" prefHeight="176.0" prefWidth="149.0" spacing="10.0" />
+
+      <!-- Register Button styled as primary -->
+      <Button fx:id="register" layoutX="238.0" layoutY="379.0" mnemonicParsing="false" onAction="#sendRegisteredData" prefHeight="31.0" prefWidth="74.0" styleClass="primary-button" text="Register" />
+
+      <!-- Back Button styled as secondary -->
+      <Button fx:id="back" layoutX="89.0" layoutY="379.0" mnemonicParsing="false" onAction="#backToMain" prefHeight="31.0" prefWidth="74.0" styleClass="secondary-button" text="Back" />
+      <TextField fx:id="name" layoutX="124.0" layoutY="113.0" promptText="Name" styleClass="input-field" />
+      <TextField fx:id="surname" layoutX="124.0" layoutY="150.0" promptText="Surname" styleClass="input-field" />
+      <TextField fx:id="email" layoutX="124.0" layoutY="189.0" promptText="Email" styleClass="input-field" />
+      <TextField fx:id="city" layoutX="124.0" layoutY="231.0" promptText="City" styleClass="input-field" />
+      <TextField fx:id="username" layoutX="124.0" layoutY="273.0" promptText="Username" styleClass="input-field" />
+      <PasswordField fx:id="password" layoutX="124.0" layoutY="315.0" promptText="Password" styleClass="input-field" />
    </children>
 </AnchorPane>

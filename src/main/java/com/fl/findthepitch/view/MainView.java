@@ -51,7 +51,7 @@ public class MainView extends Application {
 
     //TODO: see if works
     //Centralized method for switching scenes
-    private void switchScene(String fxmlFile, String title, Button button) throws IOException {
+    public void switchScene(String fxmlFile, String title, Button button) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         AnchorPane newRoot = loader.load();
         Scene newScene = new Scene(newRoot);

@@ -1,0 +1,90 @@
+
+
+/* Search Bar */
+.search-bar {
+    -fx-background-color: white;
+    -fx-border-color: #1E90FF;
+    -fx-border-width: 0 0 2px 0;
+}
+
+/* Input Field */
+.input-field {
+    -fx-background-color: white;
+    -fx-border-color: #1E90FF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+    -fx-text-fill: black;
+}
+
+.input-field:focused {
+    -fx-border-color: #00BFFF;
+}
+
+/* Primary Button (Search) */
+.primary-button {
+    -fx-background-color: #1E90FF;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.primary-button:hover {
+    -fx-background-color: #00BFFF;
+}
+
+
+
+/* Button Back */
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(159, 159, 159, 0.58);
+    -fx-border-width: 2px;
+    -fx-text-fill: rgba(0, 0, 0, 0.87);
+    -fx-font-size: 14px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+.secondary-button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+/* ComboBox */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #1E90FF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-padding: 5px;
+}
+
+/* Scroll Pane */
+.scroll-pane {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+}
+
+/* ListView */
+.list-view {
+    -fx-background-color: white;
+    -fx-border-color: #ddd;
+    -fx-border-radius: 5px;
+    -fx-padding: 5px;
+}
+
+/* Map Container */
+.map-container {
+    -fx-background-color: #e0e0e0; /* Placeholder color */
+    -fx-border-color: #1E90FF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+}

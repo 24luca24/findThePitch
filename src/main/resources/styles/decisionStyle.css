@@ -1,0 +1,30 @@
+
+/* Main butons style (search and add) */
+.main-button {
+    -fx-background-color: rgba(79, 149, 220, 0.80);
+    -fx-text-fill: white;
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 20px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+/* Hover effect for main buttons */
+.main-button:hover {
+    -fx-background-color: rgb(78, 165, 251);
+}
+
+/* Settings button */
+.settings-button {
+    -fx-background-color: rgba(159, 159, 159, 0.58);
+    -fx-background-radius: 80px;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 30px;
+}
+
+/* Hover effect settings button */
+.settings-button:hover {
+    -fx-text-fill: #FFD700;
+}

@@ -61,12 +61,12 @@ public class Login {
                 Stage currentStage = (Stage) login.getScene().getWindow();
                 SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/newMap.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
                 AnchorPane root = loader.load();
                 Scene newScene = new Scene(root);
 
                 currentStage.setScene(newScene);
-                currentStage.setTitle("Map View");
+                currentStage.setTitle("Decision Panel");
             } else {
                 System.out.println("Invalid username or password.");
                 new Alert(Alert.AlertType.ERROR, "Invalid username or password.").show();
@@ -79,7 +79,6 @@ public class Login {
 
     public void backToMain() {
         try {
-
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
             AnchorPane newRoot = loader.load();
             Scene newScene = new Scene(newRoot);

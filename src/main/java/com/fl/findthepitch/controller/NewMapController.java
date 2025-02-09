@@ -2,9 +2,13 @@ package com.fl.findthepitch.controller;
 
 import com.fl.findthepitch.model.fieldTypeInformation.FieldType;
 import com.gluonhq.maps.MapView;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
 
 public class NewMapController {
 
@@ -31,6 +35,9 @@ public class NewMapController {
 
     @FXML
     private Button searchButton;
+
+    @FXML
+    private Button back;
 
     MapView mapView;
 
@@ -88,5 +95,32 @@ public class NewMapController {
 
     private void getUserPosition() {
 
+    }
+
+    @FXML
+    private void refreshList(ActionEvent actionEvent) {
+        System.out.println("Refreshing map...");
+
+        // Remove existing map view
+        mapContainer.getChildren().clear();
+
+        // Reinitialize the map
+        setMap();
+    }
+
+    public void backToMain() {
+        try {
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
+            AnchorPane newRoot = loader.load();
+            Scene newScene = new Scene(newRoot);
+
+            Stage currentStage = (Stage) back.getScene().getWindow();
+            currentStage.setScene(newScene);
+            currentStage.setTitle("Main View");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error during switching scenes.");
+        }
     }
 }
