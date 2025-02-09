@@ -219,9 +219,11 @@ public class Registration {
         }
     }
 
-    private void autoCompletionCity(){
-        List<String> cityNames = db.getCityNames();
-        TextField.bindAutoCompletion(city, cityNames);
-    }
+    //TODO: fix autocompletion of the field
+
+//    private void autoCompletionCity(){
+//        List<String> cityNames = db.getCityNames();
+//        TextField.bindAutoCompletion(city, cityNames);
+//    }
 }
 
