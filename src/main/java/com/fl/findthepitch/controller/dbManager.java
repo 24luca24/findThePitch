@@ -218,6 +218,24 @@ public class dbManager {
         }
     }
 
+    public List<String> getCitySuggestions(String input) {
+        List<String> cities = new ArrayList<>();
+        String query = "SELECT denominazione_ita FROM municipalities WHERE denominazione_ita ILIKE ? LIMIT 10"; // Case-insensitive search
+
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, input + "%"); // Search for cities starting with input
+            try (ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    cities.add(rs.getString("denominazione_ita"));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return cities;
+    }
+
+
 
     private String removeQuotes(String value) {
         if (value != null && value.startsWith("\"") && value.endsWith("\"")) {

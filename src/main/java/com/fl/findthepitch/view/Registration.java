@@ -48,8 +48,21 @@ public class Registration {
 
     @FXML
     public void initialize() {
+        // Enable autocomplete for the city field
+        autoCompletionCity();
+
         // Detect swipe right to go back
         root.setOnSwipeRight(event -> goBack());
+    }
+
+    private void autoCompletionCity() {
+        TextFields.bindAutoCompletion(city, request -> {
+            String input = city.getText().trim();
+            if (input.isEmpty()) {
+                return new ArrayList<>(); // No suggestions if input is empty
+            }
+            return db.getCitySuggestions(input); // Fetch suggestions from DB
+        });
     }
 
     private void goBack() {

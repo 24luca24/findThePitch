@@ -148,7 +148,12 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
+                    <compilerArgs>
+                        <arg>--add-opens</arg>
+                        <arg>javafx.base/com.sun.javafx.event=org.controlsfx.controls</arg>
+                    </compilerArgs>
                 </configuration>
+
             </plugin>
             <plugin>
                 <groupId>org.openjfx</groupId>
