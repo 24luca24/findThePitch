@@ -5,7 +5,6 @@ import com.fl.findthepitch.controller.ServerConnection;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
 import javafx.concurrent.Task;
-import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 import org.controlsfx.control.textfield.TextFields;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;

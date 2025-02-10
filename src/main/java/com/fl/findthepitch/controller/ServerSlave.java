@@ -38,14 +38,21 @@ public class ServerSlave extends Thread {
                             out.writeObject(response);
                             out.flush();
                         } catch (Exception e) {
-                            System.err.println("ERROR during REGISTER command: " + e.getMessage());
-                            e.printStackTrace();  // Print full error stack trace
-                            out.writeObject("ERROR" + e.getMessage());
-                            out.flush();
+                            callException("REGISTER", e);
                         }
                         break;
 
-
+                //TODO: pass to the method the serialized object and not the get
+                    case "LOGIN":
+                        try {
+                            UserData userData = (UserData) in.readObject();
+                            boolean loginSuccessful = dbManager.validateLogin(userData.getUsername(), userData.getHashPassword());
+                            String response = loginSuccessful ? "SUCCESS" : "FAIL";
+                            out.writeObject(response);
+                            out.flush();
+                        } catch (Exception e) {
+                            callException("LOGIN", e);
+                        }
 
                     default:
                         out.writeObject("UNKNOWN_COMMAND");
@@ -76,6 +83,14 @@ public class ServerSlave extends Thread {
             System.err.println("IOException: " + e.getMessage());
         }
     }
+
+    private void callException(String command, Exception e) throws IOException {
+        System.out.println("Error when executing: " + command + "cause this exception: " + e.getMessage());
+        e.printStackTrace();
+        out.writeObject("ERROR" + e.getMessage());
+        out.flush();
+    }
+
 
 }
 

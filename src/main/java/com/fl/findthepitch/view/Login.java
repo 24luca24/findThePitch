@@ -1,8 +1,10 @@
 package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
+import com.fl.findthepitch.controller.ServerConnection;
 import com.fl.findthepitch.controller.dbManager;
-import javafx.event.ActionEvent;
+import com.fl.findthepitch.model.UserData;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -12,6 +14,8 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class Login {
 
@@ -54,19 +58,58 @@ public class Login {
             if (db.validateLogin(enteredUsername, enteredPassword)) {
                 System.out.println("Login successful!");
 
-                //Clear all the text fields
-                username.clear();
-                password.clear();
+                Task<String> loginTask = new Task<String>() {
+                    @Override
+                    protected String call() throws Exception {
+                        UserData userData = new UserData(
+                                enteredUsername,
+                                enteredPassword
+                        );
+                        return new ServerConnection().sendCommand("LOGIN", userData);
+                    }
+                };
 
-                Stage currentStage = (Stage) login.getScene().getWindow();
-                SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
+                //When the task completes successfully, process the server response on the UI thread
+                loginTask.setOnSucceeded(event -> {
+                    String response = loginTask.getValue();
+                    if ("SUCCESS".equals(response)) {
+                        System.out.println("User registered successfully.");
+                        //Clear all the text fields
+                        username.clear();
+                        password.clear();
+                        try {
+                            navigateToMainView();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
 
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
-                AnchorPane root = loader.load();
-                Scene newScene = new Scene(root);
+                        }
+                    } else {
+                        System.out.println("User login failed");
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setTitle("Login Error");
+                        alert.setHeaderText(null);
+                        alert.setContentText("User login failed. Please try again.");
+                        alert.showAndWait();
+                    }
+                });
 
-                currentStage.setScene(newScene);
-                currentStage.setTitle("Decision Panel");
+                //Handle any exceptions that occur during the network call
+                loginTask.setOnFailed(event -> {
+                    Throwable ex = loginTask.getException();
+                    ex.printStackTrace();
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Login Error");
+                    alert.setHeaderText("An error occurred during login.");
+                    alert.setContentText(ex.getMessage());
+                    alert.showAndWait();
+                });
+
+                //Start the Task in a new thread
+                Thread registrationThread = new Thread(loginTask);
+                registrationThread.setDaemon(true); // Optional: allow the application to exit if this is the only thread running
+                registrationThread.start();
+
+
             } else {
                 System.out.println("Invalid username or password.");
                 new Alert(Alert.AlertType.ERROR, "Invalid username or password.").show();
@@ -75,6 +118,18 @@ public class Login {
             e.printStackTrace();
             System.out.println("Error during login.");
         }
+    }
+
+    private void navigateToMainView() throws IOException {
+        Stage currentStage = (Stage) login.getScene().getWindow();
+        SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
+        AnchorPane root = loader.load();
+        Scene newScene = new Scene(root);
+
+        currentStage.setScene(newScene);
+        currentStage.setTitle("Decision Panel");
     }
 
     public void backToMain() {
