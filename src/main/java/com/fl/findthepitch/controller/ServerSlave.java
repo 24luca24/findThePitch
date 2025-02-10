@@ -1,61 +1,81 @@
 package com.fl.findthepitch.controller;
+import com.fl.findthepitch.model.UserData;
+
 import java.io.*;
 import java.net.Socket;
 
 public class ServerSlave extends Thread {
 
-    private Socket clientSocket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private final Socket clientSocket;
+    private final ObjectOutputStream out;
+    private final ObjectInputStream in;
 
-    public ServerSlave(Socket socket) {
+
+    public ServerSlave(Socket socket) throws IOException {
         this.clientSocket = socket;
+        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
+        this.out.flush();
+        this.in = new ObjectInputStream(clientSocket.getInputStream());
+
     }
 
     @Override
     public void run() {
         try {
-            in = new ObjectInputStream(clientSocket.getInputStream());
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
-
+            System.out.println("Client connected. Ready to receive commands.");
             while (true) {
                 System.out.println("Waiting for client command...");
-                String command = (String) in.readObject();  // Read the client's operation request
+                String command = (String) in.readObject();
                 System.out.println("Received: " + command);
 
                 switch (command) {
-                    case "LOGIN":
 
-                        break;
                     case "REGISTER":
-
+                        try {
+                            UserData userData = (UserData) in.readObject();
+                            boolean registrationSuccessful = dbManager.registerUser(userData);
+                            String response = registrationSuccessful ? "SUCCESS" : "FAIL";
+                            out.writeObject(response);
+                            out.flush();
+                        } catch (Exception e) {
+                            System.err.println("ERROR during REGISTER command: " + e.getMessage());
+                            e.printStackTrace();  // Print full error stack trace
+                            out.writeObject("ERROR" + e.getMessage());
+                            out.flush();
+                        }
                         break;
-                    case "EXIT":
-                        System.out.println("Client disconnected.");
-                        return;
+
+
+
                     default:
                         out.writeObject("UNKNOWN_COMMAND");
                         out.flush();
                         System.err.println("Unknown command received: " + command);
+                        break;
                 }
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+            System.out.println("Errore nel serverSlave");
         } finally {
             closeConnections();
         }
     }
 
     //Close all resources when the client disconnects
+    // In ServerSlave class
     private void closeConnections() {
         try {
             if (in != null) in.close();
             if (out != null) out.close();
-            if (clientSocket != null) clientSocket.close();
+            if (clientSocket != null && !clientSocket.isClosed()) {
+                clientSocket.close();
+            }
             System.out.println("Client socket closed.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("IOException: " + e.getMessage());
         }
     }
+
 }
 

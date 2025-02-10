@@ -1,6 +1,7 @@
 package com.fl.findthepitch.controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -11,26 +12,33 @@ public class Server {
 
     public static void main(String[] args) {
         try {
-            serverSocket = new ServerSocket(PORT);
+            serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("localhost"));
             System.out.println("Server started on port " + PORT);
+            dbManager db = new dbManager();
+            db.createUserTable();
+            db.createPitchTable();
+
 
             while (true) {
+                System.out.println("Waiting for client...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New client connected");
 
-                // Assign new connection to a ServerSlave thread
-                new ServerSlave(clientSocket).start();
+                new ServerSlave(clientSocket).start();  // FIX: Run in a separate thread
             }
         } catch (IOException e) {
+            System.err.println("Server error: " + e.getMessage());
             e.printStackTrace();
         } finally {
             try {
-                if (serverSocket != null) {
+                if (serverSocket != null && !serverSocket.isClosed()) {
                     serverSocket.close();
+                    System.out.println("Server socket closed.");
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.err.println("Error closing server socket: " + e.getMessage());
             }
         }
     }
+
 }
