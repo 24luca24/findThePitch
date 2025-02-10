@@ -1,42 +1,67 @@
 package com.fl.findthepitch.controller;
 
-
-
 import com.fl.findthepitch.model.Database;
 import com.fl.findthepitch.model.PasswordUtils;
 import com.fl.findthepitch.model.UserData;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-/**
- * This class is responsible for managing the database.So we can add queries here.
- */
 public class dbManager {
 
     private static Connection connection;
 
-    public dbManager() {
+    // Ensure connection is initialized at class load
+    static {
+        connectToDatabase();
+    }
+
+    // Establish the connection
+    public static void connectToDatabase() {
         try {
-            // Establish the connection to the database
-            Database.createDatabaseIfNotExists();
-            this.connection = Database.getConnection();
-            System.out.println("Database connection established successfully.");
+            if (connection == null || connection.isClosed()) {
+                Database.createDatabaseIfNotExists();
+                connection = Database.getConnection();
+                if (connection != null) {
+                    System.out.println("✅ Database connection established successfully.");
+                } else {
+                    System.err.println("❌ Failed to get a valid database connection.");
+                }
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Failed to connect to the database.");
+            System.err.println("❌ Failed to connect to the database: " + e.getMessage());
         }
     }
 
-    //Method to create the User table
-    public void createUserTable() {
-        String createTableSQL = """
+    // Ensures the connection is always valid before using it
+    private static Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed()) {
+                System.err.println("⚠️ Connection lost. Reconnecting...");
+                connectToDatabase();
+            }
+        } catch (SQLException e) {
+            System.err.println("⚠️ Error checking connection status: " + e.getMessage());
+        }
+        return connection;
+    }
+
+    // Execute table creation queries
+    private static void executeUpdate(String query, String tableName) {
+        try (Statement stmt = getConnection().createStatement()) {
+            stmt.executeUpdate(query);
+            System.out.println("✅ " + tableName + " table created or already exists.");
+        } catch (SQLException e) {
+            System.err.println("❌ Error creating " + tableName + ": " + e.getMessage());
+        }
+    }
+
+    // Create Users Table
+    public static void createUserTable() {
+        String query = """
                 CREATE TABLE IF NOT EXISTS users (
                     id SERIAL PRIMARY KEY,
                     name VARCHAR(50) NOT NULL,
@@ -49,13 +74,12 @@ public class dbManager {
                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
                 );
                 """;
-
-        executeUpdate(createTableSQL, "User Table");
+        executeUpdate(query, "Users Table");
     }
 
-    //Method to create the Pitch table
-    public void createPitchTable() {
-        String createTableSQL = """
+    // Create Pitch Table
+    public static void createPitchTable() {
+        String query = """
                 CREATE TABLE IF NOT EXISTS pitch (
                     id SERIAL PRIMARY KEY,
                     name VARCHAR(255) NOT NULL,
@@ -80,12 +104,12 @@ public class dbManager {
                     surface_type VARCHAR(100)
                 );
                 """;
-
-        executeUpdate(createTableSQL, "Pitch Table");
+        executeUpdate(query, "Pitch Table");
     }
 
-    public void createMunicipalityTable() {
-        String createTableSQL = """
+    // Create Municipality Table
+    public static void createMunicipalityTable() {
+        String query = """
         CREATE TABLE IF NOT EXISTS municipalities (
             codice_istat VARCHAR(200) PRIMARY KEY,
             denominazione_ita VARCHAR(255) NOT NULL,
@@ -104,130 +128,94 @@ public class dbManager {
             lon VARCHAR(200),
             superficie_kmq VARCHAR(200)
         );
-    """;
-        executeUpdate(createTableSQL, "Municipality Table");
+        """;
+        executeUpdate(query, "Municipality Table");
     }
 
-
-    private double parseDouble(String value) {
-        if (value == null || value.trim().isEmpty()) return 0.0;
-        return Double.parseDouble(value.replace(",", "."));
-    }
-
-
-    //Helper method to execute table creation
-    private void executeUpdate(String query, String tableName) {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate(query);
-            System.out.println(tableName + " created or already exists.");
-        } catch (SQLException e) {
-            System.err.println("Error creating " + tableName + ": " + e.getMessage());
-        }
-    }
-
-    public boolean checkUsername(String username) {
+    // Check if a username exists
+    public static boolean checkUsername(String username) {
         String query = "SELECT username FROM users WHERE username = ?";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
-
-            return rs.next(); // Returns true if there is a matching username in the DB
-
+            return rs.next(); // Returns true if username exists
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; // In case of an error, assume username does not exist
-        }
-    }
-
-    public static boolean registerUser(UserData userData) {
-        // Store hashed password
-        String hashedPassword = PasswordUtils.hashPassword(userData.getHashPassword()); // Ensure hashing before storing
-
-        String insertUserSQL = "INSERT INTO users (name, surname, username, email, password_hash, city, google_id) VALUES (?, ?, ?, ?, ?, ?, ?);";
-
-        try {
-            connection.setAutoCommit(false);
-
-            try (PreparedStatement pstmt = connection.prepareStatement(insertUserSQL)) {
-                pstmt.setString(1, userData.getName());
-                pstmt.setString(2, userData.getSurname());
-                pstmt.setString(3, userData.getUsername());
-                pstmt.setString(4, userData.getMail());
-                pstmt.setString(5, hashedPassword);
-                pstmt.setString(6, userData.getCity());
-                pstmt.setString(7, userData.getGoogleID());
-
-                int affectedRows = pstmt.executeUpdate();
-
-                if (affectedRows == 0) {
-                    throw new SQLException("User registration failed, no rows affected.");
-                }
-            }
-            connection.commit();
-            return true;
-        } catch (SQLException e) {
-            try {
-                connection.rollback();
-                System.err.println("Transaction rolled back: " + e.getMessage());
-            } catch (SQLException rollbackEx) {
-                rollbackEx.printStackTrace();
-            }
             return false;
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
         }
     }
 
-    //TODO: If the user registers via Google, their password is null since they don’t need one
-    public boolean validateLogin(String username, String enteredPassword) {
+    // Register a new user
+    public static synchronized boolean registerUser(UserData userData) {
+        String hashedPassword = PasswordUtils.hashPassword(userData.getHashPassword());
+        if (hashedPassword == null) {
+            System.err.println("❌ Password hashing failed.");
+            return false;
+        }
+
+        String query = """
+            INSERT INTO users (name, surname, username, email, password_hash, city, google_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?);
+        """;
+
+        try (PreparedStatement pstmt = getConnection().prepareStatement(query)) {
+            pstmt.setString(1, userData.getName());
+            pstmt.setString(2, userData.getSurname());
+            pstmt.setString(3, userData.getUsername());
+            pstmt.setString(4, userData.getMail());
+            pstmt.setString(5, hashedPassword);
+            pstmt.setString(6, userData.getCity());
+            pstmt.setString(7, userData.getGoogleID());
+
+            return pstmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // Validate user login
+    public static boolean validateLogin(String username, String enteredPassword) {
         String query = "SELECT password_hash FROM users WHERE username = ?";
 
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (PreparedStatement pstmt = getConnection().prepareStatement(query)) {
             pstmt.setString(1, username);
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // Get the stored password and check
                 String storedHashedPassword = rs.getString("password_hash");
                 return PasswordUtils.checkPassword(enteredPassword, storedHashedPassword);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        //If not found
         return false;
     }
 
-    public boolean checkCity(String text) {
-        String query = "SELECT 1 FROM municipalities WHERE denominazione_ita = ? LIMIT 1"; // More efficient
+    // Check if a city exists
+    public static boolean checkCity(String city) {
+        String query = "SELECT 1 FROM municipalities WHERE denominazione_ita = ? LIMIT 1";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, text);
-            try (ResultSet rs = stmt.executeQuery()) {
-                return rs.next(); // Returns true if city exists
-            }
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, city);
+            return stmt.executeQuery().next();
         } catch (SQLException e) {
             e.printStackTrace();
-            return false; // Assume city does not exist in case of an error
+            return false;
         }
     }
 
-    public List<String> getCitySuggestions(String input) {
+    // Get city suggestions
+    public static List<String> getCitySuggestions(String input) {
         List<String> cities = new ArrayList<>();
-        String query = "SELECT denominazione_ita FROM municipalities WHERE denominazione_ita ILIKE ? LIMIT 10"; // Case-insensitive search
+        String query = "SELECT denominazione_ita FROM municipalities WHERE denominazione_ita ILIKE ? LIMIT 10";
 
-        try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, input + "%"); // Search for cities starting with input
-            try (ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    cities.add(rs.getString("denominazione_ita"));
-                }
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, input + "%");
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                cities.add(rs.getString("denominazione_ita"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -235,25 +223,32 @@ public class dbManager {
         return cities;
     }
 
+    // Get all city names
+    public static List<String> getCityNames() {
+        List<String> cityNames = new ArrayList<>();
+        String query = "SELECT denominazione_ita FROM municipalities WHERE denominazione_ita IS NOT NULL";
 
-
-    private String removeQuotes(String value) {
-        if (value != null && value.startsWith("\"") && value.endsWith("\"")) {
-            return value.substring(1, value.length() - 1);
+        try (Statement stmt = getConnection().createStatement();
+             ResultSet rs = stmt.executeQuery(query)) {
+            while (rs.next()) {
+                cityNames.add(rs.getString("denominazione_ita"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
-        return value;
-    }
 
+        return cityNames;
+    }
 
     public void uploadDataFromCSV(String filePath) {
         String insertSQL = """
-        INSERT INTO municipalities (
-            codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
-            denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
-            tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ON CONFLICT (codice_istat) DO NOTHING
-    """;
+    INSERT INTO municipalities (
+        codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
+        denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
+        tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    ON CONFLICT (codice_istat) DO NOTHING
+""";
 
         try (PreparedStatement pstmt = connection.prepareStatement(insertSQL);
              BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -307,24 +302,12 @@ public class dbManager {
         }
     }
 
-    public List<String> getCityNames() {
-        String query = "SELECT denominazione_ita FROM municipalities WHERE denominazione_ita IS NOT NULL";
-        List<String> cityNames = new ArrayList<>();
-
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(query)) {
-
-            // Iterate over the result set and add city names to the list
-            while (rs.next()) {
-                String cityName = rs.getString("denominazione_ita");
-                cityNames.add(cityName);
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+    private String removeQuotes(String value) {
+        if (value != null && value.startsWith("\"") && value.endsWith("\"")) {
+            return value.substring(1, value.length() - 1);
         }
-
-        return cityNames;
+        return value;
     }
+
 
 }

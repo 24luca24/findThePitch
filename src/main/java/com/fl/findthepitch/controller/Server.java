@@ -10,7 +10,7 @@ public class Server {
     public static int PORT = 8999;
     private static ServerSocket serverSocket;
 
-    public static void main(String[] args) throws IOException{
+    public static void main(String[] args) {
         try {
             serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("localhost"));
             System.out.println("Server started on port " + PORT);
@@ -20,11 +20,21 @@ public class Server {
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New client connected");
 
-                // Assign new connection to a ServerSlave thread
-                new ServerSlave(clientSocket).start();
+                new ServerSlave(clientSocket).start();  // FIX: Run in a separate thread
             }
+        } catch (IOException e) {
+            System.err.println("Server error: " + e.getMessage());
+            e.printStackTrace();
         } finally {
-            serverSocket.close();
+            try {
+                if (serverSocket != null && !serverSocket.isClosed()) {
+                    serverSocket.close();
+                    System.out.println("Server socket closed.");
+                }
+            } catch (IOException e) {
+                System.err.println("Error closing server socket: " + e.getMessage());
             }
+        }
     }
+
 }

@@ -1,6 +1,7 @@
 package com.fl.findthepitch.controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
 
 public class Client implements Runnable {
 
@@ -8,7 +9,7 @@ public class Client implements Runnable {
         public void run() {
             try {
                 // Connect to the server at localhost on port 8999
-                ServerConnection.connectToServer("localhost", 8999);
+                ServerConnection.connectToServer(InetAddress.getByName("localhost"), Server.PORT);
                 System.out.println("ClientThread: Successfully connected to the server.");
 
                 // Optionally, you can send a test command once connected:

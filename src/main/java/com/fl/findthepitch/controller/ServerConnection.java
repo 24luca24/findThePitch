@@ -1,6 +1,7 @@
 package com.fl.findthepitch.controller;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.Socket;
 
 public class ServerConnection {
@@ -10,7 +11,7 @@ public class ServerConnection {
     private static ObjectInputStream in;
 
     //Initialize the server connection (only called once)
-    public static void connectToServer(String serverAddress, int serverPort) throws IOException {
+    public static void connectToServer(InetAddress serverAddress, int serverPort) throws IOException {
         if (socket == null || socket.isClosed()) {
             socket = new Socket(serverAddress, serverPort);
             out = new ObjectOutputStream(socket.getOutputStream());
@@ -26,27 +27,28 @@ public class ServerConnection {
             throw new IOException("Socket is not connected.");
         }
 
-        System.out.println("Sending command and data to the server");
+        System.out.println("Sending command: " + command);
         out.writeObject(command);
         out.writeObject(data);
         out.flush();
 
-        // Add this to ensure the server is responding
-        System.out.println("Waiting for the response from the server...");
         try {
             Object response = in.readObject();
             if (response instanceof String) {
-                System.out.println("Received response from server: " + response);
+                System.out.println("✅ Response received: " + response);
                 return (String) response;
             } else {
-                throw new IOException("Unexpected response from server.");
+                System.err.println("❌ Unexpected response type: " + response.getClass().getName());
+                return "ERROR";
             }
         } catch (EOFException e) {
-            // Handle unexpected EOF
-            System.out.println("EOFException: Server closed connection unexpectedly.");
-            throw new IOException("Connection to the server was closed unexpectedly.");
+            System.err.println("❌ Server closed connection unexpectedly.");
+            e.printStackTrace();
+            return "ERROR";
         }
     }
+
+
 
 
     //Method to close the connection when done

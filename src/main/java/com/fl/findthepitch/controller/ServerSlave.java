@@ -7,8 +7,9 @@ import java.net.Socket;
 public class ServerSlave extends Thread {
 
     private final Socket clientSocket;
-    private final ObjectInputStream in;
     private final ObjectOutputStream out;
+    private final ObjectInputStream in;
+
 
     public ServerSlave(Socket socket) throws IOException {
         this.clientSocket = socket;
@@ -30,20 +31,27 @@ public class ServerSlave extends Thread {
                 switch (command) {
 
                     case "REGISTER":
-                        UserData userData = (UserData) in.readObject();
-                        boolean registrationSuccessful = dbManager.registerUser(userData);
-                        if (registrationSuccessful) {
-                            out.writeObject("SUCCESS");
+                        try {
+                            UserData userData = (UserData) in.readObject();
+                            boolean registrationSuccessful = dbManager.registerUser(userData);
+                            String response = registrationSuccessful ? "SUCCESS" : "FAIL";
+                            out.writeObject(response);
                             out.flush();
-                        } else {
-                            out.writeObject("FAIL");
+                        } catch (Exception e) {
+                            System.err.println("ERROR during REGISTER command: " + e.getMessage());
+                            e.printStackTrace();  // Print full error stack trace
+                            out.writeObject("ERROR" + e.getMessage());
+                            out.flush();
                         }
                         break;
+
+
 
                     default:
                         out.writeObject("UNKNOWN_COMMAND");
                         out.flush();
                         System.err.println("Unknown command received: " + command);
+                        break;
                 }
             }
         } catch (IOException | ClassNotFoundException e) {

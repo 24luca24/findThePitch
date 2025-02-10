@@ -54,8 +54,6 @@ public class MainView extends Application {
         primaryStage.setTitle("Find The Pitch");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-       ServerConnection.connectToServer("localhost", Server.PORT);
     }
 
     //TODO: see if works
@@ -94,9 +92,9 @@ public class MainView extends Application {
     }
 
     //Close the connection with the server when the application end
-    @Override
-    public void stop() throws Exception {
-        ServerConnection.closeConnection();
-        super.stop();
-    }
+//    @Override
+//    public void stop() throws Exception {
+//        ServerConnection.closeConnection();
+//        super.stop();
+//    }
 }
