@@ -48,9 +48,6 @@ public class ServerConnection {
         }
     }
 
-
-
-
     //Method to close the connection when done
     public static void closeConnection() {
         try {

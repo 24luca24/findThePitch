@@ -1,7 +1,6 @@
 package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
-import com.fl.findthepitch.controller.dbManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,9 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.Socket;
+
 
 public class MainView extends Application {
 
@@ -28,7 +25,7 @@ public class MainView extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
 
-        //Initialize the database //TODO: checkare se non ricrea le tabelle ogni volta
+        //Initialize the database
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
         AnchorPane root = loader.load();

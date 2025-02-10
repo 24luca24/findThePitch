@@ -53,7 +53,7 @@ public class ServerSlave extends Thread {
                         } catch (Exception e) {
                             callException("LOGIN", e);
                         }
-
+                        break;
                     default:
                         out.writeObject("UNKNOWN_COMMAND");
                         out.flush();

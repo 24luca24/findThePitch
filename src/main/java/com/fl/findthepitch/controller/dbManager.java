@@ -176,7 +176,7 @@ public class dbManager {
     }
 
     // Validate user login
-    public static boolean validateLogin(String username, String enteredPassword) {
+    public static synchronized boolean validateLogin(String username, String enteredPassword) {
         String query = "SELECT password_hash FROM users WHERE username = ?";
 
         try (PreparedStatement pstmt = getConnection().prepareStatement(query)) {
