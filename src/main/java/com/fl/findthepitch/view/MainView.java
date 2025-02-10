@@ -40,6 +40,11 @@ public class MainView extends Application {
         String filePath = getClass().getResource("/CitiesCoordinates/gi_comuni_cap.csv").getPath();
         db.uploadDataFromCSV(filePath);
 
+        // Start the client thread to connect to the server in the background
+        Thread clientThread = new Thread(new Client());
+        clientThread.setDaemon(true);  // Optionally mark as daemon if you want it to exit when the application exits
+        clientThread.start();
+
         //Load FXML file and set the scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
         AnchorPane root = loader.load();

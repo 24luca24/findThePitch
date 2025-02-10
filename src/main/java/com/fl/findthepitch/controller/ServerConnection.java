@@ -14,6 +14,7 @@ public class ServerConnection {
         if (socket == null || socket.isClosed()) {
             socket = new Socket(serverAddress, serverPort);
             out = new ObjectOutputStream(socket.getOutputStream());
+            out.flush();
             in = new ObjectInputStream(socket.getInputStream());
             System.out.println("Connected to server.");
         }

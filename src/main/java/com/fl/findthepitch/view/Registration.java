@@ -4,6 +4,7 @@ import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.ServerConnection;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
+import javafx.concurrent.Task;
 import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 import org.controlsfx.control.textfield.TextFields;
 import javafx.fxml.FXML;
@@ -80,41 +81,68 @@ public class Registration {
     @FXML
     private void sendRegisteredData() {
         List<String> errors = checkFields();
-        if (errors.isEmpty()) { //No errors, proceed with registration
-            try {
-                UserData userData = new UserData(
-                        name.getText(),
-                        surname.getText(),
-                        username.getText(),
-                        email.getText(),
-                        password.getText(),
-                        city.getText()
-                );
+        if (errors.isEmpty()) { // No errors, proceed with registration
+            // Create a Task to handle the network operation off the UI thread
+            Task<String> registrationTask = new Task<>() {
+                @Override
+                protected String call() throws Exception {
+                    // Create a UserData instance with the entered information
+                    UserData userData = new UserData(
+                            name.getText(),
+                            surname.getText(),
+                            username.getText(),
+                            email.getText(),
+                            password.getText(),
+                            city.getText()
+                    );
+                    // This call blocks, so it's important to run it off the UI thread
+                    return ServerConnection.sendCommand("REGISTER", userData);
+                }
+            };
 
-                //Send registration data to the server
-                String response = ServerConnection.sendCommand("REGISTER", userData);
-                if("SUCCESS".equals(response)) {
+            // When the task completes successfully, process the server response on the UI thread
+            registrationTask.setOnSucceeded(event -> {
+                String response = registrationTask.getValue();
+                if ("SUCCESS".equals(response)) {
                     System.out.println("User registered successfully.");
                     clearFields();
-                    navigateToMainView();
+                    try {
+                        navigateToMainView();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                        showAlert(List.of("Error navigating to the main view: " + ex.getMessage()));
+                    }
                 } else {
                     System.out.println("User registration failed");
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Registration Error");
+                    alert.setHeaderText(null);
+                    alert.setContentText("User registration failed. Please try again.");
+                    alert.showAndWait();
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
-                System.out.println("IO Exception during registration: " + e.getMessage());
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-                System.out.println("ClassNotFoundException during registration: " + e.getMessage());
-            } catch (Exception e) {
-                e.printStackTrace();
-                System.out.println("Unexpected error during registration: " + e.getMessage());
-            }
+            });
 
+            // Handle any exceptions that occur during the network call
+            registrationTask.setOnFailed(event -> {
+                Throwable ex = registrationTask.getException();
+                ex.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Registration Error");
+                alert.setHeaderText("An error occurred during registration.");
+                alert.setContentText(ex.getMessage());
+                alert.showAndWait();
+            });
+
+            // Start the Task in a new thread
+            Thread registrationThread = new Thread(registrationTask);
+            registrationThread.setDaemon(true); // Optional: allow the application to exit if this is the only thread running
+            registrationThread.start();
         } else {
+            // If there are validation errors, display them
             showAlert(errors);
         }
     }
+
 
     private void clearFields() {
         name.clear();

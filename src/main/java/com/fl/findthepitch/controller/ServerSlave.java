@@ -12,8 +12,10 @@ public class ServerSlave extends Thread {
 
     public ServerSlave(Socket socket) throws IOException {
         this.clientSocket = socket;
-        this.in = new ObjectInputStream(clientSocket.getInputStream());
         this.out = new ObjectOutputStream(clientSocket.getOutputStream());
+        this.out.flush();
+        this.in = new ObjectInputStream(clientSocket.getInputStream());
+
     }
 
     @Override
