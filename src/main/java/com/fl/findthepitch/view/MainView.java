@@ -1,9 +1,11 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.LoadException;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
@@ -31,6 +33,11 @@ public class MainView extends Application {
         db.createUserTable();
         db.createPitchTable();
 
+        db.createMunicipalityTable();
+        //insert path to gi_comuni_cap.csv
+        String filePath = getClass().getResource("/CitiesCoordinates/gi_comuni_cap.csv").getPath();
+        db.uploadDataFromCSV(filePath);
+
         //Load FXML file and set the scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
         AnchorPane root = loader.load();
@@ -44,12 +51,15 @@ public class MainView extends Application {
 
     //TODO: see if works
     //Centralized method for switching scenes
-    private void switchScene(String fxmlFile, String title, Button button) throws IOException {
+    public void switchScene(String fxmlFile, String title, Button button) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
         AnchorPane newRoot = loader.load();
         Scene newScene = new Scene(newRoot);
 
-        // Get the Stage from the button clicked
+        //Push the current scene to the stack
+        SceneManager.pushScene(button.getScene());
+
+        //Get the Stage from the button clicked
         Stage currentStage = (Stage) button.getScene().getWindow();
         currentStage.setScene(newScene);
         currentStage.setTitle(title);
@@ -58,14 +68,12 @@ public class MainView extends Application {
     //Method for Register Button
     @FXML
     private void goToRegisterPage() throws IOException{
-        System.out.println("Go to Register Page"); //TODO: REMOVE THIS LINE
         switchScene("/Registration.fxml", "Registration", register);
     }
 
     //Method for Login Button
     @FXML
     private void goToLoginPage() throws IOException {
-        System.out.println("Go to Login Page"); //TODO: REMOVE THIS LINE
         switchScene("/Login.fxml", "Login", login);
     }
 

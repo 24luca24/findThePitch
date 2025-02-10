@@ -1,0 +1,57 @@
+
+
+/* Input Fields */
+.input-field {
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-border-color: #1E90FF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-font-size: 14px;
+    -fx-text-fill: black;
+    -fx-background-radius: 6;
+    -fx-padding: 5px 10px;
+}
+
+/* Placeholder text inside input fields */
+.input-field:focused {
+    -fx-border-color: #00BFFF;
+}
+
+/* Login/Register button style */
+.primary-button {
+    -fx-background-color: #1E90FF;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+/* Hover effect for button */
+.primary-button:hover {
+    -fx-background-color: #00BFFF;
+}
+
+/* Button Back */
+.secondary-button {
+    -fx-background-color: transparent;
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5px;
+    -fx-padding: 5px 10px;
+    -fx-cursor: hand;
+}
+
+/* Hover effect for back button */
+.secondary-button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: black;
+}
+
+/* Image transparency to blend better */
+.image-view {
+    -fx-opacity: 0.8;
+}

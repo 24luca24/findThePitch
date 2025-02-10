@@ -1,0 +1,63 @@
+
+
+.image-background {
+    -fx-background-size: cover;
+    -fx-background-position: center;
+}
+
+/* Style Buttons */
+.button {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-color: rgb(79, 149, 220, 0.8);
+    -fx-text-fill: white;
+    -fx-padding: 10 20 10 20;
+    -fx-background-radius: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.3, 0, 2);
+    -fx-alignment: center;
+    -fx-border-width: 2;
+    -fx-border-color: transparent;
+    -fx-border-radius: 10px;
+    -fx-transition: background-color 0.3s ease;
+}
+
+/* Button hover effects */
+.button:hover {
+    -fx-background-color: rgb(78, 165, 251, 0.8);
+    -fx-cursor: hand;
+}
+
+
+/* Position adjustments */
+#register {
+    -fx-layout-x: 169px;
+    -fx-layout-y: 190px;
+}
+
+#login {
+    -fx-layout-x: 176px;
+    -fx-layout-y: 250px;
+}
+
+#loginAsGuest {
+    -fx-layout-x: 150px;
+    -fx-layout-y: 316px;
+}
+
+/* General Text Styles */
+.label {
+    -fx-font-family: 'Arial', sans-serif;
+    -fx-font-size: 20px;
+    -fx-text-fill: white;
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+
+.button {
+    animation: fadeIn 1s ease-in-out;
+}
+

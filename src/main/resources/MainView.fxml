@@ -5,15 +5,22 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.MainView">
+<AnchorPane fx:id="root" prefHeight="600.0" prefWidth="400.0" stylesheets="@styles/main.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.MainView">
    <children>
-      <ImageView fitHeight="600.0" fitWidth="400.0" opacity="0.75" pickOnBounds="true">
+      <!-- Background image with opacity for better visibility of buttons -->
+      <ImageView fitHeight="600.0" fitWidth="428.0" opacity="0.75" pickOnBounds="true" styleClass="image-background">
          <image>
             <Image url="@images/mainView.jpg" />
          </image>
       </ImageView>
-      <Button fx:id="register" layoutX="169.0" layoutY="190.0" mnemonicParsing="false" onAction="#goToRegisterPage" text="Register" />
-      <Button fx:id="login" layoutX="176.0" layoutY="250.0" mnemonicParsing="false" onAction="#goToLoginPage" text="Login" />
-      <Button fx:id="loginAsGuest" layoutX="150.0" layoutY="316.0" mnemonicParsing="false" onAction="#enterApp" text="Login As Guest" />
+
+      <!-- Register Button -->
+      <Button fx:id="register" layoutX="141.0" layoutY="185.0" mnemonicParsing="false" onAction="#goToRegisterPage" prefHeight="44.0" prefWidth="146.0" styleClass="button" text="Register" />
+
+      <!-- Login Button -->
+      <Button fx:id="login" layoutX="141.0" layoutY="278.0" mnemonicParsing="false" onAction="#goToLoginPage" prefHeight="44.0" prefWidth="146.0" styleClass="button" text="Login" />
+
+      <!-- Login as Guest Button -->
+      <Button fx:id="loginAsGuest" layoutX="141.0" layoutY="373.0" mnemonicParsing="false" onAction="#enterApp" styleClass="button" text="Login As Guest" />
    </children>
 </AnchorPane>
