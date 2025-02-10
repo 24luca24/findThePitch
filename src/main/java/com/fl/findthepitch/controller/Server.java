@@ -9,43 +9,28 @@ public class Server {
     public static int PORT = 8999;
     private static ServerSocket serverSocket;
 
-    public static Server() {
-
-        JLabel titolo = new JLabel("Termina servizio"); //JLabel che crea il titolo nella finestra
-        JLabel testo = new JLabel("Spegni server"); //JLabel contente il motto dell'applicazione
-        JButton poweroff = new JButton("Power OFF"); //permette di cercare le canzoni
-        poweroff.addActionListener(this::actionListenerpoweroff);
-    }
-
-    private void actionListenerpoweroff(){
+    public static void main(String[] args) {
         try {
-            serverSocket.close();
-        } catch (IOException ex) {
-            System.err.println("Error during shutdown of server: " + ex.getMessage());
-        }
-        System.out.println("Server Power off");
-        System.exit(0);
+            serverSocket = new ServerSocket(PORT);
+            System.out.println("Server started on port " + PORT);
 
-    }
+            while (true) {
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("New client connected");
 
-    public static void main(String[] args)throws IOException {
-        serverSocket= new ServerSocket(PORT);
-        System.out.println("Server started");
-        try{
-            while(true){
-                Socket s = serverSocket.accept();
-                System.out.println("Server accetta connessioni");
-                new ServerSlave(s,credenziali).start();
+                // Assign new connection to a ServerSlave thread
+                new ServerSlave(clientSocket).start();
             }
-
-        }finally{
-            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (serverSocket != null) {
+                    serverSocket.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
-
-
-
-
-
-
