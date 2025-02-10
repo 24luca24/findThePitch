@@ -1,8 +1,10 @@
 package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
+import com.fl.findthepitch.controller.ServerConnection;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
+import org.controlsfx.control.tableview2.filter.filtereditor.SouthFilter;
 import org.controlsfx.control.textfield.TextFields;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -10,6 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -48,10 +52,10 @@ public class Registration {
 
     @FXML
     public void initialize() {
-        // Enable autocomplete for the city field
+        //Enable autocomplete for the city field
         autoCompletionCity();
 
-        // Detect swipe right to go back
+        //Detect swipe right to go back
         root.setOnSwipeRight(event -> goBack());
     }
 
@@ -59,9 +63,9 @@ public class Registration {
         TextFields.bindAutoCompletion(city, request -> {
             String input = city.getText().trim();
             if (input.isEmpty()) {
-                return new ArrayList<>(); // No suggestions if input is empty
+                return new ArrayList<>(); //No suggestions if input is empty
             }
-            return db.getCitySuggestions(input); // Fetch suggestions from DB
+            return db.getCitySuggestions(input); //Fetch suggestions from DB
         });
     }
 
@@ -75,8 +79,8 @@ public class Registration {
 
     @FXML
     private void sendRegisteredData() {
-        List<String> errors = checkFields(); // Check fields for errors
-        if (errors.isEmpty()) { // No errors, proceed with registration
+        List<String> errors = checkFields();
+        if (errors.isEmpty()) { //No errors, proceed with registration
             try {
                 UserData userData = new UserData(
                         name.getText(),
@@ -87,39 +91,50 @@ public class Registration {
                         city.getText()
                 );
 
-                if (db.registerUser(userData)) {
+                //Send registration data to the server
+                String response = ServerConnection.sendCommand("REGISTER", userData);
+                if("SUCCESS".equals(response)) {
                     System.out.println("User registered successfully.");
-
-                    //Clear all the text fields
-                    this.name.clear();
-                    this.surname.clear();
-                    this.email.clear();
-                    this.city.clear();
-                    this.username.clear();
-                    this.password.clear();
-
-                    //Go back to the main view after successful registration
-                    Stage currentStage = (Stage) register.getScene().getWindow();
-                    SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
-
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
-                    AnchorPane newRoot = loader.load();
-                    Scene newScene = new Scene(newRoot);
-
-                    currentStage.setScene(newScene);
-                    currentStage.setTitle("Main View");
-
+                    clearFields();
+                    navigateToMainView();
                 } else {
-                    System.out.println("User registration failed.");
+                    System.out.println("User registration failed");
                 }
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.out.println("IO Exception during registration: " + e.getMessage());
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+                System.out.println("ClassNotFoundException during registration: " + e.getMessage());
             } catch (Exception e) {
                 e.printStackTrace();
-                System.out.println("Error during registration.");
+                System.out.println("Unexpected error during registration: " + e.getMessage());
             }
+
         } else {
-            //Show errors in an alert if there are any
             showAlert(errors);
         }
+    }
+
+    private void clearFields() {
+        name.clear();
+        surname.clear();
+        email.clear();
+        city.clear();
+        username.clear();
+        password.clear();
+    }
+
+    private void navigateToMainView() throws IOException {
+        Stage currentStage = (Stage) register.getScene().getWindow();
+        SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
+
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+        AnchorPane newRoot = loader.load();
+        Scene newScene = new Scene(newRoot);
+
+        currentStage.setScene(newScene);
+        currentStage.setTitle("Main View");
     }
 
     private List<String> checkFields() {
@@ -231,12 +246,5 @@ public class Registration {
             System.out.println("Error during switching scenes.");
         }
     }
-
-    //TODO: fix autocompletion of the field
-
-//    private void autoCompletionCity(){
-//        List<String> cityNames = db.getCityNames();
-//        TextField.bindAutoCompletion(city, cityNames);
-//    }
 }
 

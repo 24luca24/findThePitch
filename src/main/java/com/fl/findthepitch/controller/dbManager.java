@@ -20,7 +20,7 @@ import java.util.Objects;
  */
 public class dbManager {
 
-    private Connection connection;
+    private static Connection connection;
 
     public dbManager() {
         try {
@@ -141,7 +141,7 @@ public class dbManager {
         }
     }
 
-    public boolean registerUser(UserData userData) {
+    public static boolean registerUser(UserData userData) {
         // Store hashed password
         String hashedPassword = PasswordUtils.hashPassword(userData.getHashPassword()); // Ensure hashing before storing
 

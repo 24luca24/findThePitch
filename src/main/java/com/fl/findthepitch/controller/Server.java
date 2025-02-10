@@ -1,6 +1,7 @@
 package com.fl.findthepitch.controller;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -11,10 +12,11 @@ public class Server {
 
     public static void main(String[] args) {
         try {
-            serverSocket = new ServerSocket(PORT);
+            serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("localhost"));
             System.out.println("Server started on port " + PORT);
 
             while (true) {
+                System.out.println("Waiting for client...");
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("New client connected");
 
