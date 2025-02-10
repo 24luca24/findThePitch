@@ -6,31 +6,29 @@ import java.net.Socket;
 
 public class ServerSlave extends Thread {
 
-    private Socket clientSocket;
-    private ObjectInputStream in;
-    private ObjectOutputStream out;
+    private final Socket clientSocket;
+    private final ObjectInputStream in;
+    private final ObjectOutputStream out;
 
-    public ServerSlave(Socket socket) {
+    public ServerSlave(Socket socket) throws IOException {
         this.clientSocket = socket;
+        this.in = new ObjectInputStream(clientSocket.getInputStream());
+        this.out = new ObjectOutputStream(clientSocket.getOutputStream());
     }
 
     @Override
     public void run() {
         try {
-            in = new ObjectInputStream(clientSocket.getInputStream());
-            out = new ObjectOutputStream(clientSocket.getOutputStream());
             System.out.println("Client connected. Ready to receive commands.");
-
             while (true) {
                 System.out.println("Waiting for client command...");
                 String command = (String) in.readObject();
-                Object data = in.readObject();
                 System.out.println("Received: " + command);
 
                 switch (command) {
 
                     case "REGISTER":
-                        UserData userData = (UserData) data;
+                        UserData userData = (UserData) in.readObject();
                         boolean registrationSuccessful = dbManager.registerUser(userData);
                         if (registrationSuccessful) {
                             out.writeObject("SUCCESS");
@@ -65,7 +63,7 @@ public class ServerSlave extends Thread {
             }
             System.out.println("Client socket closed.");
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("IOException: " + e.getMessage());
         }
     }
 
