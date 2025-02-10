@@ -17,10 +17,6 @@ public class Main {
         clientThread1.setDaemon(true);
         clientThread1.start();
 
-        Thread clientThread2 = new Thread(new Client());
-        clientThread2.setDaemon(true);
-        clientThread2.start();
-
         // Launch JavaFX Application
         Application.launch(MainView.class, args);
     }

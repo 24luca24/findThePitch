@@ -14,6 +14,10 @@ public class Server {
         try {
             serverSocket = new ServerSocket(PORT, 50, InetAddress.getByName("localhost"));
             System.out.println("Server started on port " + PORT);
+            dbManager db = new dbManager();
+            db.createUserTable();
+            db.createPitchTable();
+
 
             while (true) {
                 System.out.println("Waiting for client...");

@@ -1,16 +1,14 @@
 package com.fl.findthepitch.view;
 
-import com.fl.findthepitch.controller.*;
+import com.fl.findthepitch.controller.SceneManager;
+import com.fl.findthepitch.controller.dbManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.LoadException;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -31,32 +29,16 @@ public class MainView extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         //Initialize the database //TODO: checkare se non ricrea le tabelle ogni volta
-        dbManager db = new dbManager();
-        db.createUserTable();
-        db.createPitchTable();
 
-        db.createMunicipalityTable();
-        //insert path to gi_comuni_cap.csv
-        String filePath = getClass().getResource("/CitiesCoordinates/gi_comuni_cap.csv").getPath();
-        db.uploadDataFromCSV(filePath);
-
-        // Start the client thread to connect to the server in the background
-        Thread clientThread = new Thread(new Client());
-        clientThread.setDaemon(true);  // Optionally mark as daemon if you want it to exit when the application exits
-        clientThread.start();
-
-        //Load FXML file and set the scene
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
         AnchorPane root = loader.load();
 
-        //Set up the scene with the loaded root element
         Scene scene = new Scene(root);
         primaryStage.setTitle("Find The Pitch");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    //TODO: see if works
     //Centralized method for switching scenes
     public void switchScene(String fxmlFile, String title, Button button) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
@@ -72,19 +54,16 @@ public class MainView extends Application {
         currentStage.setTitle(title);
     }
 
-    //Method for Register Button
     @FXML
     private void goToRegisterPage() throws IOException{
         switchScene("/Registration.fxml", "Registration", register);
     }
 
-    //Method for Login Button
     @FXML
     private void goToLoginPage() throws IOException {
         switchScene("/Login.fxml", "Login", login);
     }
 
-    //Method for Login As Guest Button
     @FXML
     private void enterApp() {
         System.out.println("Login As Guest");
@@ -94,7 +73,9 @@ public class MainView extends Application {
     //Close the connection with the server when the application end
 //    @Override
 //    public void stop() throws Exception {
-//        ServerConnection.closeConnection();
+//        if (socket != null) socket.close();
+//        if (out != null) out.close();
+//        if (in != null) in.close();
 //        super.stop();
 //    }
 }
