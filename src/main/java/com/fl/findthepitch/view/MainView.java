@@ -1,6 +1,7 @@
 package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
+import com.fl.findthepitch.controller.Server;
 import com.fl.findthepitch.controller.dbManager;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -13,6 +14,9 @@ import javafx.stage.Stage;
 
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 public class MainView extends Application {
 
@@ -24,6 +28,11 @@ public class MainView extends Application {
 
     @FXML
     private Button loginAsGuest;
+
+    private Socket socket;
+    private ObjectOutputStream out;
+    private ObjectInputStream in;
+
 
     @Override
     public void start(Stage primaryStage) throws IOException {
@@ -47,6 +56,8 @@ public class MainView extends Application {
         primaryStage.setTitle("Find The Pitch");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        connectToServer();
     }
 
     //TODO: see if works
@@ -82,5 +93,16 @@ public class MainView extends Application {
     private void enterApp() {
         System.out.println("Login As Guest");
         // Add your logic for guest login
+    }
+
+    private void connectToServer() {
+        try {
+            socket = new Socket("localhost", Server.PORT);
+            out = new ObjectOutputStream(socket.getOutputStream());
+            in = new ObjectInputStream(socket.getInputStream());
+            System.out.println("Connected to server.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

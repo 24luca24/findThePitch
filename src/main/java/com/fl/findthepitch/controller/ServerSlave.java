@@ -5,6 +5,8 @@ import java.net.Socket;
 public class ServerSlave extends Thread {
 
     private Socket clientSocket;
+    private ObjectInputStream in;
+    private ObjectOutputStream out;
 
     public ServerSlave(Socket socket) {
         this.clientSocket = socket;
@@ -12,32 +14,48 @@ public class ServerSlave extends Thread {
 
     @Override
     public void run() {
-        try (
-            BufferedReader reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            PrintWriter writer = new PrintWriter(clientSocket.getOutputStream(), true);
-        ) {
-            writer.println("You are connected to the server");
-            String message;
-            while((message = reader.readLine()) != null) {
-                System.out.println("Client says: " + message);
-                writer.println("Server received: " + message);
+        try {
+            in = new ObjectInputStream(clientSocket.getInputStream());
+            out = new ObjectOutputStream(clientSocket.getOutputStream());
 
-                //Optionally break if the client sends "exit"
-                if (message.equalsIgnoreCase("exit")) {
-                    writer.println("Goodbye!");
-                    break;
+            while (true) {
+                System.out.println("Waiting for client command...");
+                String command = (String) in.readObject();  // Read the client's operation request
+                System.out.println("Received: " + command);
+
+                switch (command) {
+                    case "LOGIN":
+
+                        break;
+                    case "REGISTER":
+
+                        break;
+                    case "EXIT":
+                        System.out.println("Client disconnected.");
+                        return;
+                    default:
+                        out.writeObject("UNKNOWN_COMMAND");
+                        out.flush();
+                        System.err.println("Unknown command received: " + command);
                 }
             }
-        } catch(IOException e) {
-            System.err.println("Error due to: " + e.getMessage());
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
         } finally {
-            try {
-                clientSocket.close();
-                System.out.println("Client disconnected");
-            }catch (IOException e) {
-                System.err.println("Error due to: " + e.getMessage());
-            }
+            closeConnections();
         }
     }
 
+    //Close all resources when the client disconnects
+    private void closeConnections() {
+        try {
+            if (in != null) in.close();
+            if (out != null) out.close();
+            if (clientSocket != null) clientSocket.close();
+            System.out.println("Client socket closed.");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
+
