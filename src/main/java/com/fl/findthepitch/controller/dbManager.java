@@ -26,13 +26,13 @@ public class dbManager {
                 Database.createDatabaseIfNotExists();
                 connection = Database.getConnection();
                 if (connection != null) {
-                    System.out.println("✅ Database connection established successfully.");
+                    System.out.println("Database connection established successfully.");
                 } else {
-                    System.err.println("❌ Failed to get a valid database connection.");
+                    System.err.println("Failed to get a valid database connection.");
                 }
             }
         } catch (SQLException e) {
-            System.err.println("❌ Failed to connect to the database: " + e.getMessage());
+            System.err.println("Failed to connect to the database: " + e.getMessage());
         }
     }
 
@@ -40,11 +40,11 @@ public class dbManager {
     private static Connection getConnection() {
         try {
             if (connection == null || connection.isClosed()) {
-                System.err.println("⚠️ Connection lost. Reconnecting...");
+                System.err.println("Connection lost. Reconnecting...");
                 connectToDatabase();
             }
         } catch (SQLException e) {
-            System.err.println("⚠️ Error checking connection status: " + e.getMessage());
+            System.err.println("Error checking connection status: " + e.getMessage());
         }
         return connection;
     }
@@ -53,9 +53,9 @@ public class dbManager {
     private static void executeUpdate(String query, String tableName) {
         try (Statement stmt = getConnection().createStatement()) {
             stmt.executeUpdate(query);
-            System.out.println("✅ " + tableName + " table created or already exists.");
+            System.out.println(tableName + " table created or already exists.");
         } catch (SQLException e) {
-            System.err.println("❌ Error creating " + tableName + ": " + e.getMessage());
+            System.err.println("Error creating " + tableName + ": " + e.getMessage());
         }
     }
 
@@ -150,7 +150,7 @@ public class dbManager {
     public static synchronized boolean registerUser(UserData userData) {
         String hashedPassword = PasswordUtils.hashPassword(userData.getHashPassword());
         if (hashedPassword == null) {
-            System.err.println("❌ Password hashing failed.");
+            System.err.println("Password hashing failed.");
             return false;
         }
 
