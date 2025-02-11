@@ -1,4 +1,4 @@
-package com.fl.findthepitch.controller;
+package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.model.fieldTypeInformation.FieldType;
 import com.gluonhq.maps.MapView;
