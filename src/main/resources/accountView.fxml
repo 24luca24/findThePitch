@@ -1,0 +1,13 @@
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.fl.findthepitch.view.AccountView">
+    <Label text="User Information" layoutX="150" layoutY="20" style="-fx-font-size: 18px;"/>
+    <Label fx:id="nameLabel" text="Name: " layoutX="50" layoutY="80"/>
+    <Label fx:id="surnameLabel" text="Surname: " layoutX="50" layoutY="110"/>
+    <Label fx:id="emailLabel" text="Email: " layoutX="50" layoutY="140"/>
+    <Label fx:id="usernameLabel" text="Username: " layoutX="50" layoutY="170"/>
+    <Button text="Back" layoutX="160" layoutY="220" onAction="#goBack"/>
+</AnchorPane>

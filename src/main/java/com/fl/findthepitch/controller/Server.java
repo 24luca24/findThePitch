@@ -19,6 +19,7 @@ public class Server {
             db.createPitchTable();
 
 
+
             while (true) {
                 System.out.println("Waiting for client...");
                 Socket clientSocket = serverSocket.accept();
