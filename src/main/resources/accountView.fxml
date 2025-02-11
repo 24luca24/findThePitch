@@ -1,13 +1,42 @@
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Button?>
+
 <AnchorPane xmlns="http://javafx.com/javafx/21"
             xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.fl.findthepitch.view.AccountView">
-    <Label text="User Information" layoutX="150" layoutY="20" style="-fx-font-size: 18px;"/>
-    <Label fx:id="nameLabel" text="Name: " layoutX="50" layoutY="80"/>
-    <Label fx:id="surnameLabel" text="Surname: " layoutX="50" layoutY="110"/>
-    <Label fx:id="emailLabel" text="Email: " layoutX="50" layoutY="140"/>
-    <Label fx:id="usernameLabel" text="Username: " layoutX="50" layoutY="170"/>
-    <Button text="Back" layoutX="160" layoutY="220" onAction="#goBack"/>
+            prefHeight="600.0" prefWidth="400.0"
+            fx:controller="com.fl.findthepitch.view.AccountView"
+            style="-fx-background-color: linear-gradient(to right, #8cb5ff, #2a5298);">
+
+    <!-- Card Container -->
+    <VBox layoutX="50" layoutY="50" prefWidth="300" spacing="15"
+          style="-fx-background-color: white; -fx-background-radius: 15px; -fx-padding: 20px; -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);">
+
+        <Label text="User Information" style="-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #333;"/>
+
+        <HBox spacing="10">
+            <Label text="Name:" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <Label fx:id="nameLabel" text="" style="-fx-text-fill: #333;"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Surname:" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <Label fx:id="surnameLabel" text="" style="-fx-text-fill: #333;"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Email:" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <Label fx:id="emailLabel" text="" style="-fx-text-fill: #333;"/>
+        </HBox>
+
+        <HBox spacing="10">
+            <Label text="Username:" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+            <Label fx:id="usernameLabel" text="" style="-fx-text-fill: #333;"/>
+        </HBox>
+
+        <Button text="Back" onAction="#goBack"
+                style="-fx-background-color: #ff6b6b; -fx-text-fill: white; -fx-background-radius: 10px; -fx-padding: 10px; -fx-font-weight: bold;"/>
+    </VBox>
 </AnchorPane>
