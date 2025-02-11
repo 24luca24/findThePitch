@@ -17,6 +17,8 @@ public class Server {
             dbManager db = new dbManager();
             db.createUserTable();
             db.createPitchTable();
+            db.createMunicipalityTable();
+            db.uploadDataFromCSV("/CitiesCoordinates/gi_comuni_cap.csv"); //!CHECK CORRECTNESS
 
 
             while (true) {
