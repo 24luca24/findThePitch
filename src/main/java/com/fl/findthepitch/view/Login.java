@@ -2,6 +2,7 @@ package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.ServerConnection;
+import com.fl.findthepitch.controller.SessionManager;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
 import javafx.concurrent.Task;
@@ -57,6 +58,9 @@ public class Login {
 
             if (db.validateLogin(enteredUsername, enteredPassword)) {
                 System.out.println("Login successful!");
+                SessionManager.setCurrentUsername(enteredUsername);
+
+
 
                 Task<String> loginTask = new Task<String>() {
                     @Override

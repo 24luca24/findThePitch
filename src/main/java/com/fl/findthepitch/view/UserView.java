@@ -1,6 +1,7 @@
 package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
+import com.fl.findthepitch.controller.SessionManager;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -60,7 +61,19 @@ public class UserView {
     @FXML
     public void logout(ActionEvent event) {
         System.out.println("Logging out...");
-        // Implement logout logic, such as clearing session data
+        // Clear the current username
+        SessionManager.clearUsername();
+
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
+            AnchorPane mainRoot = loader.load();
+            Scene mainScene = new Scene(mainRoot);
+
+            Stage stage = (Stage) root.getScene().getWindow();
+            stage.setScene(mainScene);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
