@@ -121,29 +121,10 @@ public class Login {
     }
 
     private void navigateToMainView() throws IOException {
-        Stage currentStage = (Stage) login.getScene().getWindow();
-        SceneManager.pushScene(currentStage.getScene()); //Store current scene before switching
-
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
-        AnchorPane root = loader.load();
-        Scene newScene = new Scene(root);
-
-        currentStage.setScene(newScene);
-        currentStage.setTitle("Decision Panel");
+        SceneManager.switchScene("/DecisionView.fxml", "DecisionPanel", login);
     }
 
     public void backToMain() {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
-            AnchorPane newRoot = loader.load();
-            Scene newScene = new Scene(newRoot);
-
-            Stage currentStage = (Stage) back.getScene().getWindow();
-            currentStage.setScene(newScene);
-            currentStage.setTitle("Main View");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error during switching scenes.");
-        }
+        SceneManager.switchScene("/mainView.fxml", "MainView", back);
     }
 }

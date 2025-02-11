@@ -1,13 +1,19 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.model.fieldTypeInformation.AreaType;
 import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.fl.findthepitch.model.fieldTypeInformation.Price;
 import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
 import com.gluonhq.maps.MapView;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class AddField {
 
@@ -167,5 +173,24 @@ public class AddField {
         this.lightingCheckBox.setSelected(false);
     }
 
+    @FXML
+    private void goBackDecision() {
+        SceneManager.switchScene("/DecisionView.fxml", "Search Or Add Field", goBackButton);
+    }
+
+    @FXML
+    private void goToSearch() {
+        SceneManager.switchScene("/newMap.fxml", "Search Field", goToSearchButton);
+    }
+
+    @FXML
+    private void clear() {
+        clearField();
+    }
+
+    @FXML
+    private void sendPitchData() {
+
+    }
 
 }

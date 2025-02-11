@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.AddField">
+<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.AddField">
     <children>
         <!-- Map Container -->
         <AnchorPane fx:id="mapContainer" layoutY="300.0" minHeight="290.0" minWidth="400.0" prefHeight="290.0" prefWidth="400.0" />
@@ -118,10 +118,10 @@
                     <Button fx:id="imageButton" text="Load Images" GridPane.columnIndex="1" GridPane.rowIndex="16" />
 
                     <!-- Buttons -->
-                    <Button fx:id="clearButton" text="Clear" GridPane.rowIndex="17" />
-                    <Button fx:id="submitButton" text="SUBMIT" GridPane.columnIndex="1" GridPane.rowIndex="17" />
-                    <Button fx:id="goBackButton" text="Go Back" GridPane.rowIndex="18" />
-                    <Button fx:id="goToSearchButton" text="Go To Search" GridPane.columnIndex="1" GridPane.rowIndex="18" />
+                    <Button fx:id="clearButton" onAction="#clear" text="Clear" GridPane.rowIndex="17" />
+                    <Button fx:id="submitButton" onAction="#sendPitchData" text="SUBMIT" GridPane.columnIndex="1" GridPane.rowIndex="17" />
+                    <Button fx:id="goBackButton" onAction="#goBackDecision" text="Go Back" GridPane.rowIndex="18" />
+                    <Button fx:id="goToSearchButton" onAction="#goToSearch" text="Go To Search" GridPane.columnIndex="1" GridPane.rowIndex="18" />
                <Pane prefHeight="58.0" prefWidth="120.0" GridPane.rowIndex="14">
                   <children>
       
