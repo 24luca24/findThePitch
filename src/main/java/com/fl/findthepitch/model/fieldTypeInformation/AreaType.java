@@ -1,5 +1,5 @@
 package com.fl.findthepitch.model.fieldTypeInformation;
 
-public enum Price {
-    FREE, PAY;
+public enum AreaType {
+    INDOOR, OUTDOOR;
 }

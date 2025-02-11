@@ -1,6 +1,6 @@
 package com.fl.findthepitch.model;
 
-import com.fl.findthepitch.model.fieldTypeInformation.FieldType;
+import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.fl.findthepitch.model.fieldTypeInformation.Price;
 import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
 import java.time.LocalTime;
@@ -26,7 +26,7 @@ public class PitchData {
     private String email;
     private String description;
     private String image;
-    private FieldType pitchType;
+    private PitchType pitchType;
     private SurfaceType surfaceType;
 
     private PitchData(Builder builder) {
@@ -73,7 +73,7 @@ public class PitchData {
         private String email;
         private String description;
         private String image;
-        private FieldType pitchType;
+        private PitchType pitchType;
         private SurfaceType surfaceType;
 
         public Builder(Integer zipCode) {
@@ -170,7 +170,7 @@ public class PitchData {
             return this;
         }
 
-        public Builder pitchType(FieldType pitchType) {
+        public Builder pitchType(PitchType pitchType) {
             this.pitchType = pitchType;
             return this;
         }

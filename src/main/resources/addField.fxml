@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.AddField">
+    <children>
+        <!-- Map Container -->
+        <AnchorPane fx:id="mapContainer" layoutY="300.0" minHeight="290.0" minWidth="400.0" prefHeight="290.0" prefWidth="400.0" />
+
+        <!-- Scroll Pane -->
+        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="310.0" prefWidth="400.0" vbarPolicy="ALWAYS">
+            <content>
+                <GridPane hgap="10" layoutX="10.0" layoutY="10.0" vgap="10">
+                    <padding>
+                        <Insets bottom="10" left="10" right="10" top="10" />
+                    </padding>
+                    <!-- Column Sizes -->
+                    <columnConstraints>
+                        <ColumnConstraints minWidth="120.0" prefWidth="120.0" />  <!-- Label Column -->
+                        <ColumnConstraints minWidth="200.0" prefWidth="240.0" />  <!-- Input Field Column -->
+                        <ColumnConstraints minWidth="20.0" prefWidth="20.0" />    <!-- Asterisk Column -->
+                    </columnConstraints>
+
+                    <!-- Row Sizes -->
+                    <rowConstraints>
+                        <RowConstraints minHeight="30.0" prefHeight="30.0" />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                  <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                        <RowConstraints />
+                    </rowConstraints>
+
+                    <!-- General Information -->
+                    <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                    <TextField fx:id="nameField" prefWidth="240.0" promptText="Enter name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+
+                    <Label text="City" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                    <TextField fx:id="cityField" prefWidth="240.0" promptText="Enter city" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+
+                    <Label text="Address" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                    <TextField fx:id="addressField" prefWidth="240.0" promptText="Enter address" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+
+                    <Label text="Phone" GridPane.rowIndex="3" />
+                    <TextField fx:id="phoneField" prefWidth="240.0" promptText="Enter phone number" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                    <Label text="Website" GridPane.rowIndex="4" />
+                    <TextField fx:id="websiteField" prefWidth="240.0" promptText="Enter website" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                    <Label text="Email" GridPane.rowIndex="5" />
+                    <TextField fx:id="emailField" prefWidth="240.0" promptText="Enter email" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                    <!-- Schedule -->
+                    <Label text="Opening Time" GridPane.rowIndex="6" />
+                    <TextField fx:id="openTimeField" prefWidth="240.0" promptText="HH:mm" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+                    <Label text="Lunch Start" GridPane.rowIndex="7" />
+                    <TextField fx:id="lunchStartField" prefWidth="240.0" promptText="HH:mm" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                    <Label text="Lunch End" GridPane.rowIndex="8" />
+                    <TextField fx:id="lunchEndField" prefWidth="240.0" promptText="HH:mm" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+                    <Label text="Closing Time" GridPane.rowIndex="9" />
+                    <TextField fx:id="closeTimeField" prefWidth="240.0" promptText="HH:mm" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+
+                    <!-- Selection Fields -->
+                    <Label text="Price" GridPane.rowIndex="10" />
+                    <ComboBox fx:id="priceComboBox" prefHeight="26.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="10" />
+
+                    <Label text="Pitch Type" GridPane.rowIndex="11" />
+                    <ComboBox fx:id="pitchTypeComboBox" prefHeight="26.0" prefWidth="214.0" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="11" />
+
+                    <Label text="Surface Type" GridPane.rowIndex="12" />
+                    <ComboBox fx:id="surfaceTypeComboBox" prefHeight="26.0" prefWidth="215.0" GridPane.columnIndex="1" GridPane.rowIndex="12" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="12" />
+
+                    <!-- Description -->
+                    <Label text="Description" GridPane.rowIndex="15" />
+                    <TextArea fx:id="descriptionField" prefHeight="60.0" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+
+                    <!-- Image Upload -->
+                    <Label text="Image" GridPane.rowIndex="16" />
+                    <Button fx:id="imageButton" text="Load Images" GridPane.columnIndex="1" GridPane.rowIndex="16" />
+
+                    <!-- Buttons -->
+                    <Button fx:id="clearButton" text="Clear" GridPane.rowIndex="17" />
+                    <Button fx:id="submitButton" text="SUBMIT" GridPane.columnIndex="1" GridPane.rowIndex="17" />
+                    <Button fx:id="goBackButton" text="Go Back" GridPane.rowIndex="18" />
+                    <Button fx:id="goToSearchButton" text="Go To Search" GridPane.columnIndex="1" GridPane.rowIndex="18" />
+               <Pane prefHeight="58.0" prefWidth="120.0" GridPane.rowIndex="14">
+                  <children>
+      
+                          <Label layoutX="54.0" layoutY="5.0" text="Can Shower" />
+                          <CheckBox fx:id="showerCheckBox" layoutX="79.0" layoutY="27.0" />
+                  </children>
+               </Pane>
+               <Pane prefHeight="56.0" prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="14">
+                  <children>
+      
+                          <Label layoutX="19.0" layoutY="5.0" text="Has Parking" />
+                          <CheckBox fx:id="parkingCheckBox" layoutX="43.0" layoutY="28.0" />
+      
+                          <Label layoutX="115.0" layoutY="5.0" text="Has Lighting" />
+                          <CheckBox fx:id="lightingCheckBox" layoutX="136.0" layoutY="28.0" />
+                  </children>
+               </Pane>
+
+                          <!-- Facilities -->
+                    <Label text="Area Type" GridPane.rowIndex="13" />
+               <ComboBox fx:id="areaTypeComboBox" prefHeight="26.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                </GridPane>
+            </content>
+        </ScrollPane>
+    </children>
+</AnchorPane>
