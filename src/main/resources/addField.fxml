@@ -20,7 +20,7 @@
         <AnchorPane fx:id="mapContainer" layoutY="300.0" minHeight="290.0" minWidth="400.0" prefHeight="290.0" prefWidth="400.0" />
 
         <!-- Scroll Pane -->
-        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="800.0" prefWidth="400.0" vbarPolicy="ALWAYS">
+        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="310.0" prefWidth="400.0" vbarPolicy="ALWAYS">
             <content>
                 <GridPane hgap="10" layoutX="10.0" layoutY="10.0" vgap="10">
                     <padding>
@@ -141,8 +141,8 @@
                </Pane>
 
                           <!-- Facilities -->
-                    <Label text="Indoor" GridPane.rowIndex="13" />
-               <ComboBox prefHeight="26.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+                    <Label text="Area Type" GridPane.rowIndex="13" />
+               <ComboBox fx:id="areaTypeComboBox" prefHeight="26.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
                 </GridPane>
             </content>
         </ScrollPane>

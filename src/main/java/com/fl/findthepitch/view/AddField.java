@@ -1,5 +1,9 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.model.fieldTypeInformation.AreaType;
+import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
+import com.fl.findthepitch.model.fieldTypeInformation.Price;
+import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
 import com.gluonhq.maps.MapView;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -32,9 +36,6 @@ public class AddField {
     TextField emailField;
 
     @FXML
-    CheckBox indoorCheckBox;
-
-    @FXML
     CheckBox showerCheckBox;
 
     @FXML
@@ -56,13 +57,16 @@ public class AddField {
     TextField closeTimeField;
 
     @FXML
-    ComboBox priceComboBox;
+    ComboBox<Price> priceComboBox;
 
     @FXML
-    ComboBox pitchTypeComboBox;
+    ComboBox<AreaType> areaTypeComboBox;
 
     @FXML
-    ComboBox surfaceTypeComboBox;
+    ComboBox<PitchType> pitchTypeComboBox;
+
+    @FXML
+    ComboBox<SurfaceType> surfaceTypeComboBox;
 
     @FXML
     TextArea descriptionField;
@@ -86,8 +90,10 @@ public class AddField {
 
     public void initialize() {
         initializeMap();
+        initializeComboBox();
     }
 
+    //Initialize map
     private void initializeMap() {
         mapView = new MapView();
         mapView.setCenter(45.53333,  9.2); // Example: Gorla Minore
@@ -106,6 +112,44 @@ public class AddField {
         );
     }
 
+    //initialize combobox
+    private void initializeComboBox() {
+
+        //AREA COMBOBOX
+        this.areaTypeComboBox.getItems().addAll(AreaType.values());
+        //Handle ComboBox selection
+        this.areaTypeComboBox.setOnAction(e -> {
+            AreaType selectedType = this.areaTypeComboBox.getValue();
+            System.out.println("Selected: " + selectedType);
+        });
+        this.areaTypeComboBox.setValue(AreaType.INDOOR);
+
+        //PRICE COMBOBOX
+        this.priceComboBox.getItems().addAll(Price.values());
+        this.priceComboBox.setOnAction(e -> {
+            Price selectedPrice = this.priceComboBox.getValue();
+            System.out.println("Selected: " + selectedPrice);
+        });
+        this.priceComboBox.setValue(Price.FREE);
+
+        //PITCH TYPE COMBOBOX
+        this.pitchTypeComboBox.getItems().addAll(PitchType.values());
+        this.pitchTypeComboBox.setOnAction(e -> {
+            PitchType selectedPitch = this.pitchTypeComboBox.getValue();
+            System.out.println("Selected: " + selectedPitch);
+        });
+        this.pitchTypeComboBox.setValue(PitchType.FOOTBALL);
+
+        //SURFACE TYPE COMBOBOX
+        this.surfaceTypeComboBox.getItems().addAll(SurfaceType.values());
+        this.surfaceTypeComboBox.setOnAction(e -> {
+            SurfaceType selectedSurface = this.surfaceTypeComboBox.getValue();
+            System.out.println("Selected: " + selectedSurface);
+        });
+        this.surfaceTypeComboBox.setValue(SurfaceType.GRASS);
+    }
+
+    //cleaning all field
     private void clearField() {
         this.nameField.clear();
         this.cityField.clear();
@@ -118,9 +162,10 @@ public class AddField {
         this.lunchEndField.clear();
         this.closeTimeField.clear();
         this.descriptionField.clear();
-        this.indoorCheckBox.setSelected(false); //!WRONG should be a select
         this.showerCheckBox.setSelected(false);
         this.parkingCheckBox.setSelected(false);
         this.lightingCheckBox.setSelected(false);
     }
+
+
 }

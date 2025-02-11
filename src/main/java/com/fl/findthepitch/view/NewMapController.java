@@ -1,6 +1,6 @@
 package com.fl.findthepitch.view;
 
-import com.fl.findthepitch.model.fieldTypeInformation.FieldType;
+import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.gluonhq.maps.MapView;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +25,7 @@ public class NewMapController {
     private TextField textFieldInsert;
 
     @FXML
-    private ComboBox<FieldType> comboBox;
+    private ComboBox<PitchType> comboBox;
 
     @FXML
     private AnchorPane root;
@@ -75,15 +75,15 @@ public class NewMapController {
     }
 
     private void fillExpansionPanelContainer() {
-        comboBox.getItems().addAll(FieldType.values());
+        comboBox.getItems().addAll(PitchType.values());
 
         //Handle ComboBox selection
         comboBox.setOnAction(e -> {
-            FieldType selectedType = comboBox.getValue();
+            PitchType selectedType = comboBox.getValue();
             System.out.println("Selected: " + selectedType);
         });
 
-        comboBox.setValue(FieldType.FOOTBALL);
+        comboBox.setValue(PitchType.FOOTBALL);
     }
 
     @FXML
