@@ -20,7 +20,7 @@
         <AnchorPane fx:id="mapContainer" layoutY="300.0" minHeight="290.0" minWidth="400.0" prefHeight="290.0" prefWidth="400.0" />
 
         <!-- Scroll Pane -->
-        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="310.0" prefWidth="400.0" vbarPolicy="ALWAYS">
+        <ScrollPane fx:id="scrollPane" hbarPolicy="NEVER" prefHeight="800.0" prefWidth="400.0" vbarPolicy="ALWAYS">
             <content>
                 <GridPane hgap="10" layoutX="10.0" layoutY="10.0" vgap="10">
                     <padding>
@@ -48,6 +48,7 @@
                         <RowConstraints />
                         <RowConstraints />
                         <RowConstraints />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" />
                         <RowConstraints />
                         <RowConstraints />
                         <RowConstraints />
@@ -109,39 +110,39 @@
                     <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="12" />
 
                     <!-- Description -->
-                    <Label text="Description" GridPane.rowIndex="14" />
-                    <TextArea fx:id="descriptionField" prefHeight="60.0" GridPane.columnIndex="1" GridPane.rowIndex="14" />
+                    <Label text="Description" GridPane.rowIndex="15" />
+                    <TextArea fx:id="descriptionField" prefHeight="60.0" GridPane.columnIndex="1" GridPane.rowIndex="15" />
 
                     <!-- Image Upload -->
-                    <Label text="Image" GridPane.rowIndex="15" />
-                    <Button fx:id="imageButton" text="Load Images" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+                    <Label text="Image" GridPane.rowIndex="16" />
+                    <Button fx:id="imageButton" text="Load Images" GridPane.columnIndex="1" GridPane.rowIndex="16" />
 
                     <!-- Buttons -->
-                    <Button fx:id="clearButton" text="Clear" GridPane.rowIndex="16" />
-                    <Button fx:id="submitButton" text="SUBMIT" GridPane.columnIndex="1" GridPane.rowIndex="16" />
-                    <Button fx:id="goBackButton" text="Go Back" GridPane.rowIndex="17" />
-                    <Button fx:id="goToSearchButton" text="Go To Search" GridPane.columnIndex="1" GridPane.rowIndex="17" />
-               <Pane prefHeight="58.0" prefWidth="120.0" GridPane.rowIndex="13">
+                    <Button fx:id="clearButton" text="Clear" GridPane.rowIndex="17" />
+                    <Button fx:id="submitButton" text="SUBMIT" GridPane.columnIndex="1" GridPane.rowIndex="17" />
+                    <Button fx:id="goBackButton" text="Go Back" GridPane.rowIndex="18" />
+                    <Button fx:id="goToSearchButton" text="Go To Search" GridPane.columnIndex="1" GridPane.rowIndex="18" />
+               <Pane prefHeight="58.0" prefWidth="120.0" GridPane.rowIndex="14">
                   <children>
       
+                          <Label layoutX="54.0" layoutY="5.0" text="Can Shower" />
+                          <CheckBox fx:id="showerCheckBox" layoutX="79.0" layoutY="27.0" />
+                  </children>
+               </Pane>
+               <Pane prefHeight="56.0" prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="14">
+                  <children>
+      
+                          <Label layoutX="19.0" layoutY="5.0" text="Has Parking" />
+                          <CheckBox fx:id="parkingCheckBox" layoutX="43.0" layoutY="28.0" />
+      
+                          <Label layoutX="115.0" layoutY="5.0" text="Has Lighting" />
+                          <CheckBox fx:id="lightingCheckBox" layoutX="136.0" layoutY="28.0" />
+                  </children>
+               </Pane>
+
                           <!-- Facilities -->
-                          <Label layoutX="19.0" layoutY="4.0" text="Indoor" />
-                          <CheckBox fx:id="indoorCheckBox" layoutX="26.0" layoutY="30.0" />
-      
-                          <Label layoutX="86.0" layoutY="4.0" text="Can Shower" />
-                          <CheckBox fx:id="showerCheckBox" layoutX="110.0" layoutY="29.0" />
-                  </children>
-               </Pane>
-               <Pane prefHeight="56.0" prefWidth="237.0" GridPane.columnIndex="1" GridPane.rowIndex="13">
-                  <children>
-      
-                          <Label layoutX="46.0" layoutY="4.0" text="Has Parking" />
-                          <CheckBox fx:id="parkingCheckBox" layoutX="67.0" layoutY="28.0" />
-      
-                          <Label layoutX="139.0" layoutY="5.0" text="Has Lighting" />
-                          <CheckBox fx:id="lightingCheckBox" layoutX="164.0" layoutY="28.0" />
-                  </children>
-               </Pane>
+                    <Label text="Indoor" GridPane.rowIndex="13" />
+               <ComboBox prefHeight="26.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="13" />
                 </GridPane>
             </content>
         </ScrollPane>
