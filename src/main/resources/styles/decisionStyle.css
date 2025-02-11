@@ -22,9 +22,28 @@
     -fx-background-radius: 80px;
     -fx-text-fill: #ffffff;
     -fx-font-size: 30px;
+    -fx-transition: transform 0.3s ease-in-out;
 }
 
-/* Hover effect settings button */
-.settings-button:hover {
-    -fx-text-fill: #FFD700;
+/* Rotating effect when clicked */
+.settings-button.rotate {
+    -fx-rotate: 90;
+}
+
+/* Settings dropdown menu */
+.settings-menu {
+    -fx-background-color: rgba(255, 255, 255, 0.9);
+    -fx-background-radius: 10px;
+    -fx-padding: 10px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 3);
+}
+
+.settings-menu Button {
+    -fx-background-color: transparent;
+    -fx-text-fill: black;
+    -fx-font-size: 14px;
+}
+
+.settings-menu Button:hover {
+    -fx-background-color: lightgray;
 }
