@@ -35,21 +35,6 @@ public class MainView extends Application {
         primaryStage.show();
     }
 
-//    //Centralized method for switching scenes
-//    public void switchScene(String fxmlFile, String title, Button button) throws IOException {
-//        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-//        AnchorPane newRoot = loader.load();
-//        Scene newScene = new Scene(newRoot);
-//
-//        //Push the current scene to the stack
-//        SceneManager.pushScene(button.getScene());
-//
-//        //Get the Stage from the button clicked
-//        Stage currentStage = (Stage) button.getScene().getWindow();
-//        currentStage.setScene(newScene);
-//        currentStage.setTitle(title);
-//    }
-
     @FXML
     private void goToRegisterPage() throws IOException{
         SceneManager.switchScene("/Registration.fxml", "Registration", register);

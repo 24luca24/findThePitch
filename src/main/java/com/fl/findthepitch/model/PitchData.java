@@ -3,11 +3,13 @@ package com.fl.findthepitch.model;
 import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.fl.findthepitch.model.fieldTypeInformation.Price;
 import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
+
+import java.io.Serializable;
 import java.time.LocalTime;
 
-public class PitchData {
+public class PitchData implements Serializable {
 
-    private Integer zipCode;
+    private static final long serialVersionUID = 1L;
     private String name;
     private String address;
     private String city;
@@ -30,7 +32,6 @@ public class PitchData {
     private SurfaceType surfaceType;
 
     private PitchData(Builder builder) {
-        this.zipCode = builder.zipCode;
         this.name = builder.name;
         this.address = builder.address;
         this.city = builder.city;
@@ -54,7 +55,6 @@ public class PitchData {
     }
 
     public static class Builder {
-        private Integer zipCode;
         private String name;
         private String address;
         private String city;
@@ -75,10 +75,6 @@ public class PitchData {
         private String image;
         private PitchType pitchType;
         private SurfaceType surfaceType;
-
-        public Builder(Integer zipCode) {
-            this.zipCode = zipCode;
-        }
 
         public Builder name(String name) {
             this.name = name;

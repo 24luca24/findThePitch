@@ -2,6 +2,7 @@ package com.fl.findthepitch.controller;
 
 import com.fl.findthepitch.model.Database;
 import com.fl.findthepitch.model.PasswordUtils;
+import com.fl.findthepitch.model.PitchData;
 import com.fl.findthepitch.model.UserData;
 
 import java.io.BufferedReader;
@@ -238,6 +239,10 @@ public class dbManager {
         }
 
         return cityNames;
+    }
+
+    public static boolean createPitch(PitchData pitchData) {
+        //TODO
     }
 
     public void uploadDataFromCSV(String filePath) {

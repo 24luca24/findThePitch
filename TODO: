@@ -3,3 +3,5 @@ Checkare lo scorrimento a destra, la roba aggiunta nello stack per ogni windows
 creare una classe che instanzia la mappa, quindi usarla in newMapController e in addField
 
 cambiare db togliere zipcode e mettere VARCHAR e non BOOLEAN PER AreaType
+
+dare sempre gli stessi nomi alle finestre in ogni cambio pagina
