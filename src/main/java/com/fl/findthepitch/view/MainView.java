@@ -62,9 +62,9 @@ public class MainView extends Application {
     }
 
     @FXML
-    private void enterApp() {
+    private void enterApp() throws IOException {
         System.out.println("Login As Guest");
-        // Add your logic for guest login
+        switchScene("/newMap.fxml", "SearchMap", loginAsGuest);
     }
 
     //Close the connection with the server when the application end
