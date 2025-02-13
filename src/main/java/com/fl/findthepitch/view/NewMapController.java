@@ -1,5 +1,6 @@
 package com.fl.findthepitch.view;
 
+import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
 import com.fl.findthepitch.model.UserSession;
@@ -11,15 +12,12 @@ import com.gluonhq.maps.MapView;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Point2D;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
-import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
 
 import java.util.ArrayList;
@@ -62,7 +60,7 @@ public class NewMapController {
 
     private static String city;
 
-    private List<MapLayer> activeMarkers = new ArrayList<>();
+    private final List<MapLayer> activeMarkers = new ArrayList<>();
 
     public void initialize() {
 
@@ -70,13 +68,14 @@ public class NewMapController {
         listView.getItems().addAll(getPitchInUserPosition());
 
         //Fill the comboBox with type of field
-        fillExpansionPanelContainer();
+        fillComboBox();
 
         //Initialize the map
         setMap();
 
-        //Let auto-binding on city available
         autoCompletionCity();
+
+        Platform.runLater(this::warningNoPitchInTheCity);
     }
 
     private List<String> getPitchInUserPosition() {
@@ -93,27 +92,29 @@ public class NewMapController {
     private void setMap() {
         mapView = new MapView();
 
-        // Imposta le coordinate iniziali su Milano
+        //Set starting coordinates on Milan
         mapView.setCenter(new MapPoint(45.4642, 9.1900));
         mapView.setZoom(10);
 
+        //Load football field on the city of the user
         if (city == null || city.isEmpty()) {
-            System.out.println("City is null or empty, cannot retrieve pitches");
+            city = "Milano";
+            addPitchMarkers(city); //to handle non-logged user we retrieve Milan pitch
         } else {
             addPitchMarkers(city);
         }
 
-        // Setta la dimensione della mappa per adattarsi al container
+        //Set dimension to adapt to the container
         mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
         mapContainer.getChildren().add(mapView);
 
-        // Anchor the mapView to tutti i lati del container
+        //Anchor the mapView to all side of container
         AnchorPane.setTopAnchor(mapView, 0.0);
         AnchorPane.setBottomAnchor(mapView, 0.0);
         AnchorPane.setLeftAnchor(mapView, 0.0);
         AnchorPane.setRightAnchor(mapView, 0.0);
 
-        // Aggiorna la dimensione della mappa se il container cambia dimensione
+        //Update map dimension if dimension of the container change
         mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
                 mapView.setPrefWidth(newWidth.doubleValue())
         );
@@ -122,7 +123,8 @@ public class NewMapController {
         );
     }
 
-    private void fillExpansionPanelContainer() {
+    //Method to set the value of comboBox
+    private void fillComboBox() {
         comboBox.getItems().addAll(PitchType.values());
 
         //Handle ComboBox selection
@@ -134,6 +136,7 @@ public class NewMapController {
         comboBox.setValue(PitchType.FOOTBALL);
     }
 
+    //Action of the search button near the textfield. Retrieve the pitch given a city
     @FXML
     private void searchField() {
         //run it on background thread to avoid UI lag
@@ -143,63 +146,44 @@ public class NewMapController {
         });
     }
 
-
+    //TODO: We can change it to make a more advanced research
     @FXML
     private void refreshList(ActionEvent actionEvent) {
         System.out.println("Refreshing map...");
 
-        // Remove existing map view
+        //Remove existing map view
         mapContainer.getChildren().clear();
 
-        // Reinitialize the map
+        //Reinitialize the map
         setMap();
     }
 
+    //Command to turn back in the previous scene
     public void backToMain() {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
-            AnchorPane newRoot = loader.load();
-            Scene newScene = new Scene(newRoot);
-
-            Stage currentStage = (Stage) back.getScene().getWindow();
-            currentStage.setScene(newScene);
-            currentStage.setTitle("Main View");
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Error during switching scenes.");
-        }
+        SceneManager.switchScene("/DecisionView.fxml", "Main View", back);
     }
 
+    //Command to autocomplete the textfield of city
     private void autoCompletionCity() {
         TextFields.bindAutoCompletion(textFieldInsert, request -> {
             String input = textFieldInsert.getText().trim();
             if (input.isEmpty()) {
                 return new ArrayList<>(); //No suggestions if input is empty
             }
-            return db.getCitySuggestions(input); //Fetch suggestions from DB
+            return dbManager.getCitySuggestions(input); //Fetch suggestions from DB
         });
     }
 
-    /**
-     * Retrieve pitches for the city and add a red marker for each.
-     *
-     * @param city the city to load pitches for.
-     */
-    // Metodo modificato per gestire lo zoom automatico
+    //Method for the automatic zoom on the map
     private void addPitchMarkers(String city) {
-        // Rimuovi i marker esistenti
+        //Removing all existing mark on the map
         for (MapLayer layer : activeMarkers) {
             mapView.removeLayer(layer);
         }
         activeMarkers.clear();
 
+        //Return address + city, Italy String
         List<String> pitchAddresses = db.retrievePitchForLocation(city);
-
-        if (pitchAddresses.isEmpty()) {
-            System.out.println("No pitches found for city: " + city);
-            return;
-        }
 
         List<MapPoint> pitchLocations = new ArrayList<>();
 
@@ -210,13 +194,13 @@ public class NewMapController {
                 MapPoint pitchLocation = new MapPoint(latitude, longitude);
                 pitchLocations.add(pitchLocation);
 
-                // Aggiungi il marker e tienilo nella lista attiva
+                //Adding MapPoint and keep it in the active MapPoint list
                 javafx.application.Platform.runLater(() -> {
                     MapLayer markerLayer = createMarkerLayer(pitchLocation);
                     mapView.addLayer(markerLayer);
                     activeMarkers.add(markerLayer);
 
-                    // Dopo aver aggiunto tutti i marker, adatta lo zoom
+                    //After adding all mark we adapt the zoom
                     if (pitchLocations.size() == pitchAddresses.size()) {
                         fitMapToBounds(pitchLocations);
                     }
@@ -237,6 +221,7 @@ public class NewMapController {
         double minLon = points.stream().mapToDouble(MapPoint::getLongitude).min().orElse(0);
         double maxLon = points.stream().mapToDouble(MapPoint::getLongitude).max().orElse(0);
 
+        //We centered the map to guarantee that the map is centered around the cluster of markers rather than an arbitrary location
         MapPoint center = new MapPoint((minLat + maxLat) / 2, (minLon + maxLon) / 2);
         mapView.setCenter(center);
 
@@ -250,7 +235,7 @@ public class NewMapController {
         double lonDiff = maxLon - minLon;
         double maxDiff = Math.max(latDiff, lonDiff);
 
-        if (maxDiff < 0.01) return 15;  //most near zoom
+        if (maxDiff < 0.01) return 15;  //nearest zoom
         if (maxDiff < 0.05) return 14;
         if (maxDiff < 0.1) return 13;
         if (maxDiff < 0.5) return 12;
@@ -259,36 +244,45 @@ public class NewMapController {
     }
 
     private MapLayer createMarkerLayer(MapPoint point) {
-        // Create an ImageView for the marker
+        //Create an ImageView for the marker
         ImageView redPing = new ImageView(new Image(getClass().getResourceAsStream("/images/redPing.png")));
         redPing.setFitWidth(20);
         redPing.setFitHeight(20);
 
-        // Adjust position: center bottom of the image should align with the coordinates
+        //Adjust position: center bottom of the image should align with the coordinates
         redPing.setTranslateX(-redPing.getFitWidth() / 2);
         redPing.setTranslateY(-redPing.getFitHeight());
 
-        // Wrap marker in a StackPane
+        //Wrap marker in a StackPane
         StackPane markerPane = new StackPane(redPing);
 
-        // Create a custom MapLayer
+        //Create a custom MapLayer
         return new MapLayer() {
             @Override
             protected void layoutLayer() {
-                // Ensure the marker is updated in the correct UI thread
+                //Ensure the marker is updated in the correct UI thread
                 javafx.application.Platform.runLater(() -> {
                     this.getChildren().setAll(markerPane);
 
-                    // Convert lat/lon to pixel coordinates
+                    //Convert lat/lon to pixel coordinates
                     Point2D point2D = getMapPoint(point.getLatitude(), point.getLongitude());
                     markerPane.setLayoutX(point2D.getX());
                     markerPane.setLayoutY(point2D.getY());
 
-                    // Ensure correct layout update
+                    //Ensure correct layout update
                     requestLayout();
                 });
             }
         };
     }
 
+    //Displaying a warning if there are no field in a certain zone
+    private void warningNoPitchInTheCity() {
+        if(activeMarkers.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("No pitch!");
+            alert.setContentText("There are pitch in this city: " + city);
+            alert.showAndWait();
+        }
+    }
 }

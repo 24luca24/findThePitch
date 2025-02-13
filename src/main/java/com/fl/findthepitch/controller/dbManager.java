@@ -403,6 +403,7 @@ public class dbManager {
         return pitchList;
     }
 
+    //Return address + city, Italy String
     public List<String> retrievePitchForLocation(String city) {
         List<String> pitchList = new ArrayList<>();
 
