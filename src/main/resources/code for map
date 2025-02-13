@@ -1,0 +1,237 @@
+package com.fl.findthepitch.view;
+
+import com.fl.findthepitch.controller.dbManager;
+import com.fl.findthepitch.model.UserData;
+import com.fl.findthepitch.model.UserSession;
+import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
+import com.gluonhq.maps.MapView;
+import com.gluonhq.maps.MapPoint;
+import com.gluonhq.maps.LatLong;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import org.controlsfx.control.textfield.TextFields;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class NewMapController {
+
+    @FXML
+    private AnchorPane mapContainer;
+
+    @FXML
+    private ListView<String> listView;
+
+    @FXML
+    private ScrollPane scrollPane;
+
+    @FXML
+    private TextField textFieldInsert;
+
+    @FXML
+    private ComboBox<PitchType> comboBox;
+
+    @FXML
+    private AnchorPane root;
+
+    @FXML
+    private AnchorPane searchbar;
+
+    @FXML
+    private Button searchButton;
+
+    @FXML
+    private Button back;
+
+    private MapView mapView;
+
+    dbManager db = new dbManager();
+
+    public void initialize() {
+        // Initialize the ListView with some items (pitch names) for the user's city.
+        listView.getItems().addAll(getPitchInUserPosition());
+
+        // Fill the comboBox with types of field
+        fillExpansionPanelContainer();
+
+        // Initialize the map based on the user's city
+        setMap();
+
+        // Center map and add pitch markers based on the user's city
+        UserData currentUser = UserSession.getInstance().getUserData();
+        if (currentUser != null) {
+            String userCity = currentUser.getCity();
+            initializeMapForCity(userCity);
+        } else {
+            // Fallback: you might want to handle the case where no user is logged in.
+            System.out.println("No user logged in. Using default coordinates.");
+        }
+
+        // Enable auto-completion for city in the text field
+        autoCompletionCity();
+    }
+
+    private List<String> getPitchInUserPosition() {
+        UserData currentUser = UserSession.getInstance().getUserData();
+        String city = "";
+        if (currentUser != null) {
+            city = currentUser.getCity();
+            System.out.println("User's city: " + city);
+        } else {
+            System.out.println("No user is logged in.");
+        }
+        return db.retrievePitch(city);
+    }
+
+    /**
+     * Set up the basic MapView and add it to the container.
+     */
+    private void setMap() {
+        mapView = new MapView();
+        // Temporarily use a default center.
+        mapView.setCenter(45.53333, 9.2);
+        mapView.setZoom(15);
+
+        // Set the map's size to match its container
+        mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
+        mapContainer.getChildren().add(mapView);
+
+        // Anchor the mapView to all sides of the container
+        AnchorPane.setTopAnchor(mapView, 0.0);
+        AnchorPane.setBottomAnchor(mapView, 0.0);
+        AnchorPane.setLeftAnchor(mapView, 0.0);
+        AnchorPane.setRightAnchor(mapView, 0.0);
+
+        // Adjust MapView size if the container size changes
+        mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
+                mapView.setPrefWidth(newWidth.doubleValue())
+        );
+        mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) ->
+                mapView.setPrefHeight(newHeight.doubleValue())
+        );
+    }
+
+    /**
+     * Centers the map on the given city and adds markers for each pitch.
+     * @param cityName the name of the city
+     */
+    private void initializeMapForCity(String cityName) {
+        // Use a geocoding method to retrieve the city's coordinates.
+        // You need to implement this method (or use a fixed mapping if available).
+        LatLong cityCoordinates = geocodeCity(cityName);
+
+        if (cityCoordinates == null) {
+            System.out.println("Unable to geocode city, using default coordinates.");
+            cityCoordinates = new LatLong(45.53333, 9.2);
+        }
+
+        // Center the map on the city's coordinates.
+        mapView.setCenter(cityCoordinates.getLatitude(), cityCoordinates.getLongitude());
+
+        // Retrieve the list of pitches for this city.
+        List<Pitch> pitches = db.getPitchesForCity(cityName);
+        for (Pitch pitch : pitches) {
+            // If your database doesn’t store exact coordinates for the pitch,
+            // you can either use the cityCoordinates (not ideal) or use a geocoding
+            // service to get the pitch’s location.
+            LatLong pitchCoordinates = pitch.getCoordinates();
+            if (pitchCoordinates == null) {
+                // Fallback: use the city center for now.
+                pitchCoordinates = cityCoordinates;
+            }
+
+            // Create a marker (MapPoint) for the pitch.
+            MapPoint marker = new MapPoint(pitch.getName(), pitchCoordinates);
+
+            // Create a custom red ping marker graphic.
+            // Ensure you have an image resource at /images/red_ping.png in your resources.
+            ImageView redPing = new ImageView(new Image(getClass().getResourceAsStream("/images/red_ping.png")));
+            redPing.setFitWidth(20);
+            redPing.setFitHeight(20);
+            marker.setGraphic(redPing);
+
+            // Add the marker to the map.
+            mapView.addLayer(marker);
+        }
+    }
+
+    /**
+     * Stub for geocoding the city to get coordinates.
+     * In a real implementation, you could use an API (like Nominatim or Google Geocoding API).
+     */
+    private LatLong geocodeCity(String cityName) {
+        // For demonstration, let's assume we return fixed coordinates for "Gorla Minore".
+        if (cityName.equalsIgnoreCase("Gorla Minore")) {
+            return new LatLong(45.53333, 9.2);
+        }
+        // You could add more cities here or integrate an actual geocoding service.
+        // Return null if the city is unknown.
+        return null;
+    }
+
+    private void fillExpansionPanelContainer() {
+        comboBox.getItems().addAll(PitchType.values());
+
+        // Handle ComboBox selection
+        comboBox.setOnAction(e -> {
+            PitchType selectedType = comboBox.getValue();
+            System.out.println("Selected: " + selectedType);
+        });
+
+        comboBox.setValue(PitchType.FOOTBALL);
+    }
+
+    @FXML
+    private void searchField() {
+        listView.getItems().clear();
+        listView.getItems().addAll(db.retrievePitch(textFieldInsert.getText()));
+    }
+
+    @FXML
+    private void refreshList(ActionEvent actionEvent) {
+        System.out.println("Refreshing map...");
+
+        // Remove existing map view
+        mapContainer.getChildren().clear();
+
+        // Reinitialize the map
+        setMap();
+        // Reinitialize the map markers using the current user's city.
+        UserData currentUser = UserSession.getInstance().getUserData();
+        if (currentUser != null) {
+            initializeMapForCity(currentUser.getCity());
+        }
+    }
+
+    public void backToMain() {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
+            AnchorPane newRoot = loader.load();
+            Scene newScene = new Scene(newRoot);
+
+            Stage currentStage = (Stage) back.getScene().getWindow();
+            currentStage.setScene(newScene);
+            currentStage.setTitle("Main View");
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("Error during switching scenes.");
+        }
+    }
+
+    private void autoCompletionCity() {
+        TextFields.bindAutoCompletion(textFieldInsert, request -> {
+            String input = textFieldInsert.getText().trim();
+            if (input.isEmpty()) {
+                return new ArrayList<>(); // No suggestions if input is empty
+            }
+            return db.getCitySuggestions(input); // Fetch suggestions from DB
+        });
+    }
+}

@@ -157,6 +157,12 @@ public class AddField {
         mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
         mapContainer.getChildren().add(mapView);
 
+        //Anchor the mapView to all sides of the container
+        AnchorPane.setTopAnchor(mapView, 0.0);
+        AnchorPane.setBottomAnchor(mapView, 0.0);
+        AnchorPane.setLeftAnchor(mapView, 0.0);
+        AnchorPane.setRightAnchor(mapView, 0.0);
+
         //Adjust MapView size if the container size changes
         mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
                 mapView.setPrefWidth(newWidth.doubleValue())
@@ -290,6 +296,7 @@ public class AddField {
                     alert.setHeaderText("The pitch was created correctly.");
                     alert.showAndWait();
                     //TODO: METHODS TO SHOW THE FIELD IN THE MAP
+                    showFieldInMap();
                 } else {
                     System.out.println("Pitch creation failed");
                     Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -317,6 +324,10 @@ public class AddField {
             registrationThread.start();
         }
 
+    }
+
+    private void showFieldInMap() {
+        System.out.println("new field created");
     }
 
     //Method to get data from the form
@@ -376,10 +387,18 @@ public class AddField {
             if (address == null || address.trim().isEmpty()) {
                 return "Address cannot be null or empty";
             }
-            return "";
+
+            // Regular expression to check if the address follows "Street Name, Number" format
+            String addressPattern = "^[\\p{L}0-9 .'-]+, \\d+$";
+            if (!address.matches(addressPattern)) {
+                return "Invalid address format. Use: 'Street Name, Number' (e.g., 'Via Roma, 10')";
+            }
+
+            return ""; // Address is valid
         }
 
-        private String checkPhone() {
+
+    private String checkPhone() {
             if (phone == null || phone.trim().isEmpty()) {
                 return "Phone number cannot be null or empty";
             }

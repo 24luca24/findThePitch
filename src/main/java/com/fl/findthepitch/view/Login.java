@@ -4,6 +4,7 @@ import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.ServerConnection;
 import com.fl.findthepitch.controller.dbManager;
 import com.fl.findthepitch.model.UserData;
+import com.fl.findthepitch.model.UserSession;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Scene;
@@ -73,6 +74,8 @@ public class Login {
                     String response = loginTask.getValue();
                     if ("SUCCESS".equals(response)) {
                         System.out.println("User logged in successfully.");
+                        UserData loggedInUser = db.getLoggedUserData(enteredUsername);
+                        UserSession.getInstance().setUserData(loggedInUser);
                         //Clear all the text fields
                         username.clear();
                         password.clear();

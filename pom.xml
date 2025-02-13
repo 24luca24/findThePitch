@@ -64,6 +64,12 @@
             <artifactId>controlsfx</artifactId>
             <version>11.1.0</version>
         </dependency>
+        <!-- JSON dependency (org.json) -->
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version>20210307</version>
+        </dependency>
 
 
         <!-- JUnit -->

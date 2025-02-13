@@ -4,6 +4,7 @@ import com.fl.findthepitch.model.Database;
 import com.fl.findthepitch.model.PasswordUtils;
 import com.fl.findthepitch.model.PitchData;
 import com.fl.findthepitch.model.UserData;
+import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.fl.findthepitch.model.fieldTypeInformation.Price;
 
 import java.io.BufferedReader;
@@ -372,4 +373,78 @@ public class dbManager {
     }
 
 
+    public List<String> retrievePitch(String city) {
+        List<String> pitchList = new ArrayList<>();
+        // Corrected SQL query: removed extra comma and fetched required fields
+        String query = "SELECT name, city, address, pitch_type FROM PITCH WHERE city = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, city);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                // Build the PitchData object (you could also build it fully if you need more info)
+                PitchData pitch = new PitchData.Builder()
+                        .name(rs.getString("name"))
+                        .city(rs.getString("city"))
+                        .address(rs.getString("address"))
+                        // Assuming pitch_type stored as String that matches your PitchType enum
+                        .pitchType(PitchType.valueOf(rs.getString("pitch_type")))
+                        .build();
+
+                // Create a formatted string with multiple fields on separate lines:
+                String formattedPitch = "name: " + pitch.getName() + "\n" +
+                        "city: " + pitch.getCity() + "\n" +
+                        "address: " + pitch.getAddress() + "\n" +
+                        "pitch type: " + pitch.getPitchType() + "\n";
+                pitchList.add(formattedPitch);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return pitchList;
+    }
+
+    public List<String> retrievePitchForLocation(String city) {
+        List<String> pitchList = new ArrayList<>();
+
+        //Fixed SQL query: removed extra comma and corrected JOIN condition
+        String query = "SELECT p.address, p.city FROM pitch p JOIN municipalities m ON p.city = m.denominazione_ita WHERE p.city = ?";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, city);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                //Retrieve fields
+                String address = rs.getString("address");
+                String cityName = rs.getString("city");
+
+                //Format: "Street Name, Number, City, Italy"
+                String formattedAddress = address + ", " + cityName + ", Italy";
+                pitchList.add(formattedAddress);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving pitch locations", e);
+        }
+
+        return pitchList;
+    }
+
+
+    public UserData getLoggedUserData(String enteredUsername) {
+        String query = "SELECT * FROM users WHERE username = ?";
+        try(PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, enteredUsername);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                return new UserData(rs.getString("name"),
+                                    rs.getString("surname"),
+                                    rs.getString("city"),
+                                    rs.getString("username"),
+                                    rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
