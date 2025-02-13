@@ -1,8 +1,8 @@
 module com.fl.findthepitch {
     requires javafx.fxml;
     requires javafx.controls;
-    requires javafx.base;       // ✅ Ensure JavaFX base is explicitly required
-    requires javafx.graphics;   // ✅ Ensure JavaFX graphics is explicitly required
+    requires javafx.base;
+    requires javafx.graphics;
 
     requires com.google.auth.oauth2;
     requires com.google.auth;
@@ -12,6 +12,8 @@ module com.fl.findthepitch {
     requires com.gluonhq.charm.glisten; // Required for Gluon UI controls
     requires com.gluonhq.attach.util;
     requires transitive org.controlsfx.controls;
+    requires org.json;
+    requires java.net.http;
 
     // Open packages for JavaFX reflection
     opens com.fl.findthepitch.view to javafx.fxml;
@@ -24,4 +26,5 @@ module com.fl.findthepitch {
     exports com.fl.findthepitch.view;
     exports com.fl.findthepitch.model;
     exports com.fl.findthepitch.controller;
+    exports com.fl.findthepitch.model.fieldTypeInformation;
 }

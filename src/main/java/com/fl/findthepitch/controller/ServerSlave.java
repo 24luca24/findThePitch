@@ -1,4 +1,5 @@
 package com.fl.findthepitch.controller;
+import com.fl.findthepitch.model.PitchData;
 import com.fl.findthepitch.model.UserData;
 
 import java.io.*;
@@ -42,7 +43,6 @@ public class ServerSlave extends Thread {
                         }
                         break;
 
-                //TODO: pass to the method the serialized object and not the get
                     case "LOGIN":
                         try {
                             UserData userData = (UserData) in.readObject();
@@ -52,6 +52,19 @@ public class ServerSlave extends Thread {
                             out.flush();
                         } catch (Exception e) {
                             callException("LOGIN", e);
+                        }
+                        break;
+
+                    case "CREATEPITCH":
+                        //TODO: ADD LOGIC
+                        try {
+                            PitchData pitchData = (PitchData) in.readObject();
+                            boolean creationPitchSuccessful = dbManager.createPitch(pitchData);
+                            String response = creationPitchSuccessful ? "SUCCESS" : "FAIL";
+                            out.writeObject(response);
+                            out.flush();
+                        } catch (Exception e) {
+                            callException("CREATEPITCH", e);
                         }
                         break;
                     default:

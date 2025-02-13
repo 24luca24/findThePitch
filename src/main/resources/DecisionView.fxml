@@ -24,7 +24,7 @@
       </font>
    </Button>
 
-   <Button fx:id="add" layoutX="112.0" layoutY="323.0" mnemonicParsing="false" prefHeight="77.0" prefWidth="177.0" styleClass="main-button" text="ADD 📍">
+   <Button fx:id="add" layoutX="112.0" layoutY="323.0" mnemonicParsing="false" onAction="#loadAddFieldPage" prefHeight="77.0" prefWidth="177.0" styleClass="main-button" text="ADD 📍">
       <font>
          <Font name="Baloo Bhai 2 Bold" size="18.0" />
       </font>
