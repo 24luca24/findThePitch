@@ -71,11 +71,10 @@ public class NewMapController {
         fillComboBox();
 
         //Initialize the map
-        setMap();
+        initializeMap();
 
         autoCompletionCity();
 
-        Platform.runLater(this::warningNoPitchInTheCity);
     }
 
     private List<String> getPitchInUserPosition() {
@@ -89,12 +88,8 @@ public class NewMapController {
         return db.retrievePitch(city);
     }
 
-    private void setMap() {
+    private void initializeMap() {
         mapView = new MapView();
-
-        //Set starting coordinates on Milan
-        mapView.setCenter(new MapPoint(45.4642, 9.1900));
-        mapView.setZoom(10);
 
         //Load football field on the city of the user
         if (city == null || city.isEmpty()) {
@@ -155,7 +150,7 @@ public class NewMapController {
         mapContainer.getChildren().clear();
 
         //Reinitialize the map
-        setMap();
+        initializeMap();
     }
 
     //Command to turn back in the previous scene
@@ -184,6 +179,10 @@ public class NewMapController {
 
         //Return address + city, Italy String
         List<String> pitchAddresses = db.retrievePitchForLocation(city);
+        if(pitchAddresses.isEmpty()) {
+            Platform.runLater(this::warningNoPitchInTheCity);
+            return;
+        }
 
         List<MapPoint> pitchLocations = new ArrayList<>();
 
@@ -243,6 +242,7 @@ public class NewMapController {
         return 10;  //most far zoom
     }
 
+    //Create the point to the map (red point to spot a location like google maps)
     private MapLayer createMarkerLayer(MapPoint point) {
         //Create an ImageView for the marker
         ImageView redPing = new ImageView(new Image(getClass().getResourceAsStream("/images/redPing.png")));
@@ -281,7 +281,7 @@ public class NewMapController {
         if(activeMarkers.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
             alert.setTitle("No pitch!");
-            alert.setContentText("There are pitch in this city: " + city);
+            alert.setContentText("There aren't pitch in this city: " + city);
             alert.showAndWait();
         }
     }

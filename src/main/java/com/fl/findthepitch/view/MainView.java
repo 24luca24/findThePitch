@@ -50,13 +50,4 @@ public class MainView extends Application {
         System.out.println("Login As Guest");
         SceneManager.switchScene("/newMap.fxml", "SearchMap", loginAsGuest);
     }
-
-    //Close the connection with the server when the application end
-//    @Override
-//    public void stop() throws Exception {
-//        if (socket != null) socket.close();
-//        if (out != null) out.close();
-//        if (in != null) in.close();
-//        super.stop();
-//    }
 }
