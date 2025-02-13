@@ -1,5 +1,6 @@
 package com.fl.findthepitch.model;
 
+import com.fl.findthepitch.model.fieldTypeInformation.AreaType;
 import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.fl.findthepitch.model.fieldTypeInformation.Price;
 import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
@@ -13,9 +14,8 @@ public class PitchData implements Serializable {
     private String name;
     private String address;
     private String city;
-    private boolean isIndoor;
-    private Price isFree;
-    private Double price;
+    private AreaType areaType;
+    private Price price;
     private boolean canShower;
     private boolean hasParking;
     private boolean hasLighting;
@@ -35,8 +35,7 @@ public class PitchData implements Serializable {
         this.name = builder.name;
         this.address = builder.address;
         this.city = builder.city;
-        this.isIndoor = builder.isIndoor;
-        this.isFree = builder.isFree;
+        this.areaType = builder.areaType;
         this.price = builder.price;
         this.canShower = builder.canShower;
         this.hasParking = builder.hasParking;
@@ -58,9 +57,8 @@ public class PitchData implements Serializable {
         private String name;
         private String address;
         private String city;
-        private boolean isIndoor;
-        private Price isFree;
-        private Double price;
+        private AreaType areaType;
+        private Price price;
         private boolean canShower;
         private boolean hasParking;
         private boolean hasLighting;
@@ -91,18 +89,12 @@ public class PitchData implements Serializable {
             return this;
         }
 
-        public Builder isIndoor(boolean isIndoor) {
-            this.isIndoor = isIndoor;
+        public Builder areaType(AreaType area) {
+            this.areaType = area;
             return this;
         }
-
-        public Builder isFree(Price isFree) {
-            this.isFree = isFree;
-            return this;
-        }
-
-        public Builder price(Double price) {
-            this.price = price;
+        public Builder price(Price isFree) {
+            this.price = isFree;
             return this;
         }
 
@@ -179,5 +171,81 @@ public class PitchData implements Serializable {
         public PitchData build() {
             return new PitchData(this);
         }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public AreaType areaType() {
+        return areaType;
+    }
+
+    public Price getPrice() {
+        return price;
+    }
+
+    public boolean isCanShower() {
+        return canShower;
+    }
+
+    public boolean isHasParking() {
+        return hasParking;
+    }
+
+    public boolean isHasLighting() {
+        return hasLighting;
+    }
+
+    public LocalTime getOpeningTime() {
+        return openingTime;
+    }
+
+    public LocalTime getLunchBrakeStart() {
+        return lunchBrakeStart;
+    }
+
+    public LocalTime getLunchBrakeEnd() {
+        return lunchBrakeEnd;
+    }
+
+    public LocalTime getClosingTime() {
+        return closingTime;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public PitchType getPitchType() {
+        return pitchType;
+    }
+
+    public SurfaceType getSurfaceType() {
+        return surfaceType;
     }
 }

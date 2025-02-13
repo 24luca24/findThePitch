@@ -24,4 +24,5 @@ module com.fl.findthepitch {
     exports com.fl.findthepitch.view;
     exports com.fl.findthepitch.model;
     exports com.fl.findthepitch.controller;
+    exports com.fl.findthepitch.model.fieldTypeInformation;
 }

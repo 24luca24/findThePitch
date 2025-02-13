@@ -72,7 +72,7 @@ public class Login {
                 loginTask.setOnSucceeded(event -> {
                     String response = loginTask.getValue();
                     if ("SUCCESS".equals(response)) {
-                        System.out.println("User registered successfully.");
+                        System.out.println("User logged in successfully.");
                         //Clear all the text fields
                         username.clear();
                         password.clear();

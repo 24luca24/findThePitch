@@ -4,6 +4,7 @@ import com.fl.findthepitch.model.Database;
 import com.fl.findthepitch.model.PasswordUtils;
 import com.fl.findthepitch.model.PitchData;
 import com.fl.findthepitch.model.UserData;
+import com.fl.findthepitch.model.fieldTypeInformation.Price;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -82,28 +83,27 @@ public class dbManager {
     public static void createPitchTable() {
         String query = """
                 CREATE TABLE IF NOT EXISTS pitch (
-                    id SERIAL PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    address VARCHAR(255) NOT NULL,
-                    zip_code INTEGER,
-                    city VARCHAR(100),
-                    is_indoor BOOLEAN,
-                    is_free BOOLEAN,
-                    can_shower BOOLEAN,
-                    has_parking BOOLEAN,
-                    has_lighting BOOLEAN,
-                    opening_time TIME,
-                    lunch_break_start TIME,
-                    lunch_break_end TIME,
-                    closing_time TIME,
-                    phone_number VARCHAR(20),
-                    website VARCHAR(255),
-                    email VARCHAR(255),
-                    description TEXT,
-                    imageURL TEXT,
-                    pitch_type VARCHAR(100),
-                    surface_type VARCHAR(100)
-                );
+                      id SERIAL PRIMARY KEY,
+                      name VARCHAR(255) NOT NULL,
+                      city VARCHAR(100) NOT NULL,
+                      address VARCHAR(255) NOT NULL,
+                      areaType VARCHAR(100) NOT NULL,
+                      price VARCHAR(100) NOT NULL,  -- Assuming Price is an ENUM (FREE/PAID), stored as BOOLEAN (true=FREE, false=PAID)
+                      can_shower BOOLEAN,
+                      has_parking BOOLEAN,
+                      has_lighting BOOLEAN,
+                      opening_time TIME,
+                      lunch_break_start TIME,
+                      lunch_break_end TIME,
+                      closing_time TIME,
+                      phone_number VARCHAR(20),
+                      website VARCHAR(255),
+                      email VARCHAR(255),
+                      description TEXT NOT NULL,
+                      imageURL TEXT,
+                      pitch_type VARCHAR(100) NOT NULL,
+                      surface_type VARCHAR(100) NOT NULL
+                  );
                 """;
         executeUpdate(query, "Pitch Table");
     }
@@ -242,18 +242,75 @@ public class dbManager {
     }
 
     public static boolean createPitch(PitchData pitchData) {
-        //TODO
+        String query = """
+        INSERT INTO pitch (name, address, city, areaType, price, can_shower, has_parking, 
+        has_lighting, opening_time, lunch_break_start, lunch_break_end, closing_time, phone_number, 
+        website, email, description, imageURL, pitch_type, surface_type)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """;
+
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, pitchData.getName());
+            stmt.setString(2, pitchData.getAddress());
+            stmt.setString(3, pitchData.getCity());
+            stmt.setString(4, pitchData.areaType().name());
+            stmt.setString(5, pitchData.getPrice().name());  // Assuming Price Enum
+            stmt.setBoolean(6, pitchData.isCanShower());
+            stmt.setBoolean(7, pitchData.isHasParking());
+            stmt.setBoolean(8, pitchData.isHasLighting());
+
+            // Handle nullable time fields safely
+            if (pitchData.getOpeningTime() != null) {
+                stmt.setTime(9, Time.valueOf(pitchData.getOpeningTime()));
+            } else {
+                stmt.setNull(9, Types.TIME);
+            }
+
+            if (pitchData.getLunchBrakeStart() != null) {
+                stmt.setTime(10, Time.valueOf(pitchData.getLunchBrakeStart()));
+            } else {
+                stmt.setNull(10, Types.TIME);
+            }
+
+            if (pitchData.getLunchBrakeEnd() != null) {
+                stmt.setTime(11, Time.valueOf(pitchData.getLunchBrakeEnd()));
+            } else {
+                stmt.setNull(11, Types.TIME);
+            }
+
+            if (pitchData.getClosingTime() != null) {
+                stmt.setTime(12, Time.valueOf(pitchData.getClosingTime()));
+            } else {
+                stmt.setNull(12, Types.TIME);
+            }
+
+            stmt.setString(13, pitchData.getPhoneNumber());
+            stmt.setString(14, pitchData.getWebsite());
+            stmt.setString(15, pitchData.getEmail());
+            stmt.setString(16, pitchData.getDescription());
+            stmt.setString(17, pitchData.getImage()); // Assuming this is a URL or Base64 string
+            stmt.setString(18, pitchData.getPitchType().name()); // Enum to string
+            stmt.setString(19, pitchData.getSurfaceType().name()); // Enum to string
+
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     public void uploadDataFromCSV(String filePath) {
         String insertSQL = """
-    INSERT INTO municipalities (
-        codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
-        denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
-        tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (codice_istat) DO NOTHING
-""";
+            INSERT INTO municipalities (
+                codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
+                denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
+                tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (codice_istat) DO NOTHING
+        """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(insertSQL);
              BufferedReader br = new BufferedReader(new FileReader(filePath))) {
