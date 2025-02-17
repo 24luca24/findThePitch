@@ -303,6 +303,22 @@ public class dbManager {
         }
     }
 
+    public static String[] getUserInfo(String username) {
+        String query = "SELECT name, surname, email, username FROM users WHERE username = ?";
+
+        try (PreparedStatement pstmt = getConnection().prepareStatement(query)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                return new String[]{rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("username")};
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void uploadDataFromCSV(String filePath) {
         String insertSQL = """
             INSERT INTO municipalities (
