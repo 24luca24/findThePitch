@@ -2,7 +2,10 @@ package com.fl.findthepitch.controller;
 
 import com.fl.findthepitch.model.Database;
 import com.fl.findthepitch.model.PasswordUtils;
+import com.fl.findthepitch.model.PitchData;
 import com.fl.findthepitch.model.UserData;
+import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
+import com.fl.findthepitch.model.fieldTypeInformation.Price;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -81,28 +84,27 @@ public class dbManager {
     public static void createPitchTable() {
         String query = """
                 CREATE TABLE IF NOT EXISTS pitch (
-                    id SERIAL PRIMARY KEY,
-                    name VARCHAR(255) NOT NULL,
-                    address VARCHAR(255) NOT NULL,
-                    zip_code INTEGER,
-                    city VARCHAR(100),
-                    is_indoor BOOLEAN,
-                    is_free BOOLEAN,
-                    can_shower BOOLEAN,
-                    has_parking BOOLEAN,
-                    has_lighting BOOLEAN,
-                    opening_time TIME,
-                    lunch_break_start TIME,
-                    lunch_break_end TIME,
-                    closing_time TIME,
-                    phone_number VARCHAR(20),
-                    website VARCHAR(255),
-                    email VARCHAR(255),
-                    description TEXT,
-                    imageURL TEXT,
-                    pitch_type VARCHAR(100),
-                    surface_type VARCHAR(100)
-                );
+                      id SERIAL PRIMARY KEY,
+                      name VARCHAR(255) NOT NULL,
+                      city VARCHAR(100) NOT NULL,
+                      address VARCHAR(255) NOT NULL,
+                      areaType VARCHAR(100) NOT NULL,
+                      price VARCHAR(100) NOT NULL,  -- Assuming Price is an ENUM (FREE/PAID), stored as BOOLEAN (true=FREE, false=PAID)
+                      can_shower BOOLEAN,
+                      has_parking BOOLEAN,
+                      has_lighting BOOLEAN,
+                      opening_time TIME,
+                      lunch_break_start TIME,
+                      lunch_break_end TIME,
+                      closing_time TIME,
+                      phone_number VARCHAR(20),
+                      website VARCHAR(255),
+                      email VARCHAR(255),
+                      description TEXT NOT NULL,
+                      imageURL TEXT,
+                      pitch_type VARCHAR(100) NOT NULL,
+                      surface_type VARCHAR(100) NOT NULL
+                  );
                 """;
         executeUpdate(query, "Pitch Table");
     }
@@ -240,32 +242,76 @@ public class dbManager {
         return cityNames;
     }
 
-    public static String[] getUserInfo(String username) {
-        String query = "SELECT name, surname, email, username FROM users WHERE username = ?";
+    public static boolean createPitch(PitchData pitchData) {
+        String query = """
+        INSERT INTO pitch (name, address, city, areaType, price, can_shower, has_parking, 
+        has_lighting, opening_time, lunch_break_start, lunch_break_end, closing_time, phone_number, 
+        website, email, description, imageURL, pitch_type, surface_type)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    """;
 
-        try (PreparedStatement pstmt = getConnection().prepareStatement(query)) {
-            pstmt.setString(1, username);
-            ResultSet rs = pstmt.executeQuery();
+        try (Connection conn = Database.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
 
-            if (rs.next()) {
-                return new String[]{rs.getString("name"), rs.getString("surname"), rs.getString("email"), rs.getString("username")};
+            stmt.setString(1, pitchData.getName());
+            stmt.setString(2, pitchData.getAddress());
+            stmt.setString(3, pitchData.getCity());
+            stmt.setString(4, pitchData.areaType().name());
+            stmt.setString(5, pitchData.getPrice().name());  // Assuming Price Enum
+            stmt.setBoolean(6, pitchData.isCanShower());
+            stmt.setBoolean(7, pitchData.isHasParking());
+            stmt.setBoolean(8, pitchData.isHasLighting());
+
+            // Handle nullable time fields safely
+            if (pitchData.getOpeningTime() != null) {
+                stmt.setTime(9, Time.valueOf(pitchData.getOpeningTime()));
+            } else {
+                stmt.setNull(9, Types.TIME);
             }
+
+            if (pitchData.getLunchBrakeStart() != null) {
+                stmt.setTime(10, Time.valueOf(pitchData.getLunchBrakeStart()));
+            } else {
+                stmt.setNull(10, Types.TIME);
+            }
+
+            if (pitchData.getLunchBrakeEnd() != null) {
+                stmt.setTime(11, Time.valueOf(pitchData.getLunchBrakeEnd()));
+            } else {
+                stmt.setNull(11, Types.TIME);
+            }
+
+            if (pitchData.getClosingTime() != null) {
+                stmt.setTime(12, Time.valueOf(pitchData.getClosingTime()));
+            } else {
+                stmt.setNull(12, Types.TIME);
+            }
+
+            stmt.setString(13, pitchData.getPhoneNumber());
+            stmt.setString(14, pitchData.getWebsite());
+            stmt.setString(15, pitchData.getEmail());
+            stmt.setString(16, pitchData.getDescription());
+            stmt.setString(17, pitchData.getImage()); // Assuming this is a URL or Base64 string
+            stmt.setString(18, pitchData.getPitchType().name()); // Enum to string
+            stmt.setString(19, pitchData.getSurfaceType().name()); // Enum to string
+
+            int rowsInserted = stmt.executeUpdate();
+            return rowsInserted > 0;
         } catch (SQLException e) {
             e.printStackTrace();
+            return false;
         }
-        return null;
     }
-
 
     public void uploadDataFromCSV(String filePath) {
         String insertSQL = """
-    INSERT INTO municipalities (
-        codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
-        denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
-        tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    ON CONFLICT (codice_istat) DO NOTHING
-""";
+            INSERT INTO municipalities (
+                codice_istat, denominazione_ita, denominazione_altra, cap, sigla_provincia,
+                denominazione_provincia, tipologia_provincia, codice_regione, denominazione_regione,
+                tipologia_regione, ripartizione_geografica, flag_capoluogo, codice_belfiore, lat, lon, superficie_kmq
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (codice_istat) DO NOTHING
+        """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(insertSQL);
              BufferedReader br = new BufferedReader(new FileReader(filePath))) {
@@ -327,4 +373,79 @@ public class dbManager {
     }
 
 
+    public List<String> retrievePitch(String city) {
+        List<String> pitchList = new ArrayList<>();
+        // Corrected SQL query: removed extra comma and fetched required fields
+        String query = "SELECT name, city, address, pitch_type FROM PITCH WHERE city = ?";
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, city);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                // Build the PitchData object (you could also build it fully if you need more info)
+                PitchData pitch = new PitchData.Builder()
+                        .name(rs.getString("name"))
+                        .city(rs.getString("city"))
+                        .address(rs.getString("address"))
+                        // Assuming pitch_type stored as String that matches your PitchType enum
+                        .pitchType(PitchType.valueOf(rs.getString("pitch_type")))
+                        .build();
+
+                // Create a formatted string with multiple fields on separate lines:
+                String formattedPitch = "name: " + pitch.getName() + "\n" +
+                        "city: " + pitch.getCity() + "\n" +
+                        "address: " + pitch.getAddress() + "\n" +
+                        "pitch type: " + pitch.getPitchType() + "\n";
+                pitchList.add(formattedPitch);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return pitchList;
+    }
+
+    //Return address + city, Italy String
+    public List<String> retrievePitchForLocation(String city) {
+        List<String> pitchList = new ArrayList<>();
+
+        //Fixed SQL query: removed extra comma and corrected JOIN condition
+        String query = "SELECT p.address, p.city FROM pitch p JOIN municipalities m ON p.city = m.denominazione_ita WHERE p.city = ?";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, city);
+            ResultSet rs = stmt.executeQuery();
+
+            while (rs.next()) {
+                //Retrieve fields
+                String address = rs.getString("address");
+                String cityName = rs.getString("city");
+
+                //Format: "Street Name, Number, City, Italy"
+                String formattedAddress = address + ", " + cityName + ", Italy";
+                pitchList.add(formattedAddress);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("Error retrieving pitch locations", e);
+        }
+
+        return pitchList;
+    }
+
+
+    public UserData getLoggedUserData(String enteredUsername) {
+        String query = "SELECT * FROM users WHERE username = ?";
+        try(PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, enteredUsername);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                return new UserData(rs.getString("name"),
+                                    rs.getString("surname"),
+                                    rs.getString("city"),
+                                    rs.getString("username"),
+                                    rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
 }
