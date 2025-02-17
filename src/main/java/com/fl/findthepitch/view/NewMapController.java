@@ -1,6 +1,5 @@
 package com.fl.findthepitch.view;
 
-import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.gluonhq.maps.MapView;
 import javafx.event.ActionEvent;
@@ -111,12 +110,14 @@ public class NewMapController {
 
     public void backToMain() {
         try {
-            Scene previousScene = SceneManager.popScene();
-            if (previousScene != null) {
-                Stage currentStage = (Stage) back.getScene().getWindow();
-                currentStage.setScene(previousScene);
-                currentStage.setTitle("FindThePitch");
-            }
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/DecisionView.fxml"));
+            AnchorPane newRoot = loader.load();
+            Scene newScene = new Scene(newRoot);
+
+            Stage currentStage = (Stage) back.getScene().getWindow();
+            currentStage.setScene(newScene);
+            currentStage.setTitle("Main View");
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("Error during switching scenes.");

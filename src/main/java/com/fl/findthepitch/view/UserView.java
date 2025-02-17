@@ -88,4 +88,17 @@ public class UserView {
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setScene(newScene);
     }
+
+    @FXML
+    public void loadAddFieldPage(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/addField.fxml"));
+        AnchorPane newRoot = loader.load();
+        Scene newScene = new Scene(newRoot);
+
+        // Push the current scene to the stack
+        SceneManager.pushScene(search.getScene());
+
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.setScene(newScene);
+    }
 }

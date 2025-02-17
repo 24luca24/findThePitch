@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<?import javafx.scene.layout.VBox?>
 <AnchorPane fx:id="root" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="400.0" stylesheets="@styles/decisionStyle.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.UserView">
 
 
@@ -19,20 +18,11 @@
       </font>
    </Button>
 
-   <Button fx:id="settings" layoutX="343.0" layoutY="-6.0"
-           mnemonicParsing="false" prefHeight="18.0" prefWidth="59.0"
-           styleClass="settings-button" text="⚙️" onAction="#toggleSettingsMenu">
+   <Button fx:id="settings" layoutX="343.0" layoutY="-6.0" mnemonicParsing="false" prefHeight="18.0" prefWidth="59.0" styleClass="settings-button" text="⚙️">
       <font>
-         <Font size="36.0"/>
+         <Font size="36.0" />
       </font>
    </Button>
-
-   <!-- Settings Dropdown -->
-   <VBox fx:id="settingsMenu" layoutX="320.0" layoutY="30.0"
-         spacing="5" visible="false" styleClass="settings-menu">
-      <Button text="Account" onAction="#goToAccount"/>
-      <Button text="Log Out" onAction="#logout"/>
-   </VBox>
 
    <Button fx:id="add" layoutX="112.0" layoutY="323.0" mnemonicParsing="false" prefHeight="77.0" prefWidth="177.0" styleClass="main-button" text="ADD 📍">
       <font>

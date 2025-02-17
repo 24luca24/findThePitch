@@ -26,6 +26,14 @@ public class UserData implements Serializable {
         this.googleID = null;
     }
 
+    public UserData(String name, String surname, String city, String username, String email) {
+        this.name = name;
+        this.surname = surname;
+        this.username = username;
+        this.email = email;
+        this.city = city;
+    }
+
     //Constructor using googleID
     public UserData(String name, String surname, String username, String email, Integer age, String googleID) {
         this.name = name;

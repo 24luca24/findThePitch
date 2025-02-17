@@ -99,7 +99,7 @@ public class Registration {
                 }
             };
 
-            // When the task completes successfully, process the server response on the UI thread
+            //When the task completes successfully, process the server response on the UI thread
             registrationTask.setOnSucceeded(event -> {
                 String response = registrationTask.getValue();
                 if ("SUCCESS".equals(response)) {
