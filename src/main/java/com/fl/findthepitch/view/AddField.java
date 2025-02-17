@@ -141,6 +141,7 @@ public class AddField {
 
     dbManager db = new dbManager();
 
+    //Method that runs when we load the window and instantiate objects by callind methods
     public void initialize() {
         initializeMap();
         initializeComboBox();
@@ -150,7 +151,7 @@ public class AddField {
     //Initialize map
     private void initializeMap() {
         mapView = new MapView();
-        mapView.setCenter(45.53333, 9.2); // Example: Gorla Minore
+        mapView.setCenter(45.53333, 9.2);
         mapView.setZoom(15);
 
         //Set the map's size to match its container
@@ -396,7 +397,6 @@ public class AddField {
 
             return ""; // Address is valid
         }
-
 
     private String checkPhone() {
             if (phone == null || phone.trim().isEmpty()) {
