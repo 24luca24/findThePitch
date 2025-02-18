@@ -1,5 +1,7 @@
 package com.fl.findthepitch.controller;
 
+import com.fl.findthepitch.model.PitchData;
+
 import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -30,6 +32,32 @@ public class ServerConnection {
         System.out.println("Sending command: " + command);
         out.writeObject(command);
         out.writeObject(data);
+        out.flush();
+
+        try {
+            Object response = in.readObject();
+            if (response instanceof String) {
+                System.out.println("Response received: " + response);
+                return (String) response;
+            } else {
+                System.err.println("Unexpected response type: " + response.getClass().getName());
+                return "ERROR";
+            }
+        } catch (EOFException e) {
+            System.err.println("Server closed connection unexpectedly.");
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    //Method to send command to server
+    public static Object sendCommand(String command) throws IOException, ClassNotFoundException {
+        if (socket == null || socket.isClosed()) {
+            throw new IOException("Socket is not connected.");
+        }
+
+        System.out.println("Sending command: " + command);
+        out.writeObject(command);
         out.flush();
 
         try {

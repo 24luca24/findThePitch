@@ -4,8 +4,10 @@ import com.fl.findthepitch.model.Database;
 import com.fl.findthepitch.model.PasswordUtils;
 import com.fl.findthepitch.model.PitchData;
 import com.fl.findthepitch.model.UserData;
+import com.fl.findthepitch.model.fieldTypeInformation.AreaType;
 import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.fl.findthepitch.model.fieldTypeInformation.Price;
+import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -442,6 +444,25 @@ public class dbManager {
                                     rs.getString("city"),
                                     rs.getString("username"),
                                     rs.getString("email"));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    //to fix
+    public PitchData retrievePitchValue(String name, String address, String city, String surfaceType) {
+        String query = "SELECT * FROM pitch WHERE name = ?, address = ?, city = ?, surfaceType = ?";
+        try(PreparedStatement stmt = getConnection().prepareStatement(query)) {
+            stmt.setString(1, name);
+            ResultSet rs = stmt.executeQuery();
+            if(rs.next()) {
+                return new PitchData(rs.getString("name"),
+                        rs.getString("address"),
+                        rs.getString("city"),
+                        rs.getString("phonenumber"),
+                        rs.getString("email"));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

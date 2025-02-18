@@ -8,6 +8,7 @@ import com.fl.findthepitch.model.fieldTypeInformation.AreaType;
 import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
 import com.fl.findthepitch.model.fieldTypeInformation.Price;
 import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
+import com.fl.findthepitch.service.AddressValidator;
 import com.gluonhq.maps.MapView;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -281,7 +282,7 @@ public class AddField {
                             .surfaceType(surface)
                             .build();
                     //This call blocks, so it's important to run it off the UI thread
-                    return ServerConnection.sendCommand("CREATEPITCH", pitchData);
+                    return (ServerConnection.sendCommand("CREATEPITCH", pitchData);
                 }
             };
 
@@ -393,6 +394,10 @@ public class AddField {
             String addressPattern = "^[\\p{L}0-9 .'-]+, \\d+$";
             if (!address.matches(addressPattern)) {
                 return "Invalid address format. Use: 'Street Name, Number' (e.g., 'Via Roma, 10')";
+            }
+
+            if(!AddressValidator.isAddressValid(address)) {
+                return "Address doesn't exist!";
             }
 
             return ""; // Address is valid

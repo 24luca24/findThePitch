@@ -64,14 +64,14 @@
                     <!-- General Information -->
                     <Label text="Name" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                     <TextField fx:id="nameField" prefWidth="240.0" promptText="Enter name" GridPane.columnIndex="1" GridPane.rowIndex="0" />
-                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="0" GridPane.halignment="RIGHT"/>
 
                     <Label text="City" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                     <TextField fx:id="cityField" prefWidth="240.0" promptText="Enter city" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                     <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="1" />
 
                     <Label text="Address" GridPane.columnIndex="0" GridPane.rowIndex="2" />
-                    <TextField fx:id="addressField" prefWidth="240.0" promptText="Enter address (street name, number)" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    <TextField fx:id="addressField" prefWidth="240.0" promptText="Enter address" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                     <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="2" />
 
                     <Label text="Phone" GridPane.rowIndex="3" />
@@ -112,6 +112,7 @@
                     <!-- Description -->
                     <Label text="Description" GridPane.rowIndex="15" />
                     <TextArea fx:id="descriptionField" prefHeight="60.0" GridPane.columnIndex="1" GridPane.rowIndex="15" />
+                    <Label text="*" textFill="red" GridPane.columnIndex="2" GridPane.rowIndex="15" />
 
                     <!-- Image Upload -->
                     <Label text="Image" GridPane.rowIndex="16" />

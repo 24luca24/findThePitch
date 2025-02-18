@@ -56,7 +56,6 @@ public class ServerSlave extends Thread {
                         break;
 
                     case "CREATEPITCH":
-                        //TODO: ADD LOGIC
                         try {
                             PitchData pitchData = (PitchData) in.readObject();
                             boolean creationPitchSuccessful = dbManager.createPitch(pitchData);
@@ -67,6 +66,13 @@ public class ServerSlave extends Thread {
                             callException("CREATEPITCH", e);
                         }
                         break;
+
+                    case "RETRIEVEPITCH":
+                        try {
+
+                        } catch (Exception e) {
+                            callException("RETRIEVEPITCH", e);
+                        }
                     default:
                         out.writeObject("UNKNOWN_COMMAND");
                         out.flush();
