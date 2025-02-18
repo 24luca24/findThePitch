@@ -468,21 +468,45 @@ public class dbManager {
     }
 
     //to fix
-    public PitchData retrievePitchValue(String name, String address, String city, String surfaceType) {
-        String query = "SELECT * FROM pitch WHERE name = ?, address = ?, city = ?, surfaceType = ?";
-        try(PreparedStatement stmt = getConnection().prepareStatement(query)) {
+    public static PitchData retrievePitchValue(String name, String address, String city, String surfaceType) {
+        String query = "SELECT * FROM pitch WHERE name = ? AND address = ? AND city = ? AND surfaceType = ?";
+
+        try (PreparedStatement stmt = getConnection().prepareStatement(query)) {
             stmt.setString(1, name);
+            stmt.setString(2, address);
+            stmt.setString(3, city);
+            stmt.setString(4, surfaceType);
+
             ResultSet rs = stmt.executeQuery();
-            if(rs.next()) {
-                return new PitchData(rs.getString("name"),
-                        rs.getString("address"),
-                        rs.getString("city"),
-                        rs.getString("phonenumber"),
-                        rs.getString("email"));
+            if (rs.next()) {
+                return new PitchData.Builder()
+                        .name(rs.getString("name"))
+                        .address(rs.getString("address"))
+                        .city(rs.getString("city"))
+                        .areaType(AreaType.valueOf(rs.getString("areaType"))) // Ensure ENUM conversion
+                        .price(Price.valueOf(rs.getString("price"))) // Adjust if needed
+                        .canShower(rs.getBoolean("canShower"))
+                        .hasParking(rs.getBoolean("hasParking"))
+                        .hasLighting(rs.getBoolean("hasLighting"))
+                        .openingTime(rs.getTime("openingTime").toLocalTime()) // Ensure conversion
+                        .lunchBrakeStart(rs.getTime("lunchBrakeStart").toLocalTime())
+                        .lunchBrakeEnd(rs.getTime("lunchBrakeEnd").toLocalTime())
+                        .closingTime(rs.getTime("closingTime").toLocalTime())
+                        .phoneNumber(rs.getString("phonenumber"))
+                        .website(rs.getString("website"))
+                        .email(rs.getString("email"))
+                        .description(rs.getString("description"))
+                        .image(rs.getString("image"))
+                        .pitchType(PitchType.valueOf(rs.getString("pitchType"))) // Ensure ENUM conversion
+                        .surfaceType(SurfaceType.valueOf(rs.getString("surfaceType"))) // Ensure ENUM conversion
+                        .build();
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
+            throw new RuntimeException("Error retrieving pitch data", e);
         }
+
         return null;
     }
+
 }

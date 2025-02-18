@@ -51,6 +51,33 @@ public class ServerConnection {
     }
 
     //Method to send command to server
+    public static Object sendCommandObj(String command, Object data) throws IOException, ClassNotFoundException {
+        if (socket == null || socket.isClosed()) {
+            throw new IOException("Socket is not connected.");
+        }
+
+        System.out.println("Sending command: " + command);
+        out.writeObject(command);
+        out.writeObject(data);
+        out.flush();
+
+        try {
+            Object response = in.readObject();
+            if (response instanceof String) {
+                System.out.println("Response received: " + response);
+                return (String) response;
+            } else {
+                System.err.println("Unexpected response type: " + response.getClass().getName());
+                return "ERROR";
+            }
+        } catch (EOFException e) {
+            System.err.println("Server closed connection unexpectedly.");
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    //Method to send command to server
     public static Object sendCommand(String command) throws IOException, ClassNotFoundException {
         if (socket == null || socket.isClosed()) {
             throw new IOException("Socket is not connected.");

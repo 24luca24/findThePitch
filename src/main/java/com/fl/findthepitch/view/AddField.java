@@ -282,7 +282,7 @@ public class AddField {
                             .surfaceType(surface)
                             .build();
                     //This call blocks, so it's important to run it off the UI thread
-                    return (ServerConnection.sendCommand("CREATEPITCH", pitchData);
+                    return (ServerConnection.sendCommand("CREATEPITCH", pitchData));
                 }
             };
 
