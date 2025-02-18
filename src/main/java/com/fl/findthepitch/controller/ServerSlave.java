@@ -69,10 +69,15 @@ public class ServerSlave extends Thread {
 
                     case "RETRIEVEPITCH":
                         try {
-
+                            PitchData pitchData = (PitchData) in.readObject();
+                            PitchData dataToRetrieve = dbManager.retrievePitchValue(pitchData.getName(), pitchData.getAddress(), pitchData.getCity(), String.valueOf(pitchData.getSurfaceType()));
+                            out.writeObject(dataToRetrieve);
+                            out.flush();
                         } catch (Exception e) {
                             callException("RETRIEVEPITCH", e);
                         }
+                        break;
+
                     default:
                         out.writeObject("UNKNOWN_COMMAND");
                         out.flush();

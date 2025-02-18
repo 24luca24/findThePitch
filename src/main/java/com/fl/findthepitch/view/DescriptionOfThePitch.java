@@ -114,33 +114,37 @@ public class DescriptionOfThePitch {
             System.err.println("error no data");
         }
 
-        Task<String> returnPitchTask = new Task<String>() {
+        Task<PitchData> returnPitchTask = new Task<PitchData>() {
             @Override
-            protected String call() throws Exception {
-                return ServerConnection.sendCommand("RETRIEVEPITCH", dbManager.retrievePitchValue(pc.getPitchData().getName(), pc.getPitchData().getCity(), pc.getPitchData().getCity(), (pc.getPitchData().getSurfaceType()).toString()));
+            protected PitchData call() throws Exception {
+                PitchData dataToSend = new PitchData(pc.getPitchData().getName(), pc.getPitchData().getCity(), pc.getPitchData().getCity(), pc.getPitchData().getSurfaceType());
+                return (PitchData) ServerConnection.sendCommandObj("RETRIEVEPITCH", dataToSend);
+                }
             };
 
             //When the task completes successfully, process the server response on the UI thread
             returnPitchTask.setOnSucceeded(event -> {
-                String response = returnPitchTask.getValue();
-                if ("SUCCESS".equals(response)) {
+                PitchData response = returnPitchTask.getValue();
+                if (response != null) {
                     System.out.println("Pitch retrieved successfully.");
-                    try {
-                        updateUIWithPitchData();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                        showAlert(List.of("Error navigating to the main view: " + ex.getMessage()));
-                    }
+                    updateUIWithPitchData(response);
                 } else {
-                    System.out.println("User registration failed");
+                    System.out.println("Pitch retrieval fail");
                     Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Registration Error");
+                    alert.setTitle("Pitch Retrieval Error");
                     alert.setHeaderText(null);
-                    alert.setContentText("User registration failed. Please try again.");
+                    alert.setContentText("Pitch Retrieval failed. Please try again.");
                     alert.showAndWait();
                 }
             });
+            return null; //TO FIX
         }
+
+    private void showAlert(List<String> strings) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Pitch Retrieving");
+        alert.setContentText("No pitch retrieved");
+        alert.showAndWait();
     }
 
     private void updateUIWithPitchData(PitchData pitchData) {
