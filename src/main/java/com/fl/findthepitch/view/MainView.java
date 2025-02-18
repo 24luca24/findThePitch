@@ -29,6 +29,9 @@ public class MainView extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/MainView.fxml"));
         AnchorPane root = loader.load();
 
+        // Set the HostServices in the SceneManager so it’s available later.
+        SceneManager.setHostServices(getHostServices());
+
         Scene scene = new Scene(root);
         primaryStage.setTitle("Find The Pitch");
         primaryStage.setScene(scene);

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<AnchorPane fx:id="newRoot" maxHeight="600.0" maxWidth="400.0" minHeight="600.0" minWidth="400.0" prefHeight="600.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.fl.findthepitch.view.DescriptionOfThePitch">
+    <children>
+        <!-- The image is 200x200 at the top-left -->
+        <ImageView fx:id="image" fitHeight="200.0" fitWidth="200.0" layoutX="0.0" layoutY="0.0" pickOnBounds="true" preserveRatio="true" />
+
+        <!-- The GridPane starts 10 pixels below the image (at y=210) and spans the full width -->
+        <GridPane layoutX="0.0" layoutY="210.0" prefHeight="390.0" prefWidth="400.0">
+            <!-- Two equal columns -->
+            <columnConstraints>
+                <ColumnConstraints minWidth="10.0" prefWidth="200.0" />
+                <ColumnConstraints minWidth="10.0" prefWidth="200.0" />
+            </columnConstraints>
+
+            <!-- 10 rows:
+                 - Rows 0 to 8 for 16 fields (8 rows × 2 = 16) plus one extra field (Surface Type)
+                   paired with an empty cell.
+                 - Row 9 for the Back and Google Maps buttons.
+                 (Adjust the row heights as needed.)
+            -->
+            <rowConstraints>
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+                <RowConstraints minHeight="30.0" prefHeight="39.0" />
+            </rowConstraints>
+
+            <children>
+                <!-- Row 0: Name and Address -->
+                <Label fx:id="labelName" text="Name: &lt;nameValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label fx:id="labelAddress" text="Address: &lt;addressValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+                <!-- Row 1: City and Area Type -->
+                <Label fx:id="labelCity" text="City: &lt;cityValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label fx:id="labelAreaType" text="Area Type: &lt;areaTypeValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+                <!-- Row 2: Price and Can Shower -->
+                <Label fx:id="labelPrice" text="Price: &lt;priceValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label text="Can Shower: &lt;canShowerValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+                <!-- Row 3: Has Parking and Has Lighting -->
+                <Label fx:id="labelHasParking" text="Has Parking: &lt;hasParkingValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <Label fx:id="labelHasLight" text="Has Lighting: &lt;hasLightingValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+
+                <!-- Row 4: Opening Time and Lunch Brake Start -->
+                <Label fx:id="labelOpenTime" text="Opening Time: &lt;openingTimeValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <Label fx:id="labelLunchBrake" text="Lunch Brake Start: &lt;lunchBrakeStartValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+
+                <!-- Row 5: Lunch Brake End and Closing Time -->
+                <Label fx:id="labelLunchEnd" text="Lunch Brake End: &lt;lunchBrakeEndValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                <Label fx:id="labelClosingTIme" text="Closing Time: &lt;closingTimeValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+
+                <!-- Row 6: Phone Number and Website -->
+                <Label fx:id="labelPhone" text="Phone Number: &lt;phoneNumberValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                <Label fx:id="labelWebsite" text="Website: &lt;websiteValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+
+                <!-- Row 7: Email and Pitch Type -->
+                <Label fx:id="labelEmail" text="Email: &lt;emailValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                <Label fx:id="labelPitch" text="Pitch Type: &lt;pitchTypeValue&gt;" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+
+                <!-- Row 8: Surface Type in left cell; right cell left empty -->
+                <Label fx:id="labelSurface" text="Surface Type: &lt;surfaceTypeValue&gt;" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                <Label text="" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+
+                <!-- Row 9: Buttons -->
+                <Button fx:id="backButton" onAction="#goBack" text="Back" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                <Button fx:id="googleMapsButton" onAction="#goToGoogleMaps" text="Google Maps" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+            </children>
+        </GridPane>
+      <TextArea fx:id="textArea" editable="false" layoutX="200.0" prefHeight="200.0" prefWidth="200.0" />
+    </children>
+</AnchorPane>

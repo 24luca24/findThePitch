@@ -2,6 +2,8 @@ package com.fl.findthepitch.view;
 
 import com.fl.findthepitch.controller.SceneManager;
 import com.fl.findthepitch.controller.dbManager;
+import com.fl.findthepitch.model.PitchData;
+import com.fl.findthepitch.model.PitchSession;
 import com.fl.findthepitch.model.UserData;
 import com.fl.findthepitch.model.UserSession;
 import com.fl.findthepitch.model.fieldTypeInformation.PitchType;
@@ -13,15 +15,20 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
+import javafx.scene.input.MouseEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NewMapController {
 
@@ -41,9 +48,6 @@ public class NewMapController {
     private ComboBox<PitchType> comboBox;
 
     @FXML
-    private AnchorPane root;
-
-    @FXML
     private AnchorPane searchbar;
 
     @FXML
@@ -57,6 +61,8 @@ public class NewMapController {
     private MapView mapView;
 
     dbManager db = new dbManager();
+
+    PitchSession ps;
 
     private static String city;
 
@@ -139,6 +145,38 @@ public class NewMapController {
             listView.getItems().clear();
             listView.getItems().addAll(db.retrievePitch(textFieldInsert.getText()));
         });
+    }
+
+    //Action to open the description panel of a field and load the road to go there using google maps
+    @FXML
+    private void handleListClick(MouseEvent event) {
+        String selectedItem = listView.getSelectionModel().getSelectedItem();
+        if (selectedItem != null) {
+            // Get the current stage from the event's source (the list view)
+            Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            ps.getInstance().setPitchData(parsePitchData(selectedItem));
+            // Now call the switchScene method with the currentStage as an argument
+            SceneManager.switchScene(currentStage, "/descriptionOfThePitch.fxml", "Pitch Description");
+        }
+    }
+
+    //Helper method to parse string result and save it into a pitchObject
+    private PitchData parsePitchData(String selectedItem) {
+        Map<String, String> values = new HashMap<>();
+        String[] data = selectedItem.split("\n");
+        for (String d : data) {
+            String[] parts = d.split(":", 2);
+            if (parts.length == 2) {
+                values.put(parts[0].trim().toLowerCase(), parts[1].trim());
+            }
+        }
+        // Build the PitchData object using the extracted values
+        return new PitchData.Builder()
+                .name(values.getOrDefault("name", ""))
+                .city(values.getOrDefault("city", ""))
+                .address(values.getOrDefault("address", ""))
+                .pitchType(PitchType.valueOf(values.getOrDefault("pitch type", "FOOTBALL").toUpperCase())) // Assuming PitchType is an Enum
+                .build();
     }
 
     //TODO: We can change it to make a more advanced research

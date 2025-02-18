@@ -62,7 +62,7 @@
         <dependency>
             <groupId>org.controlsfx</groupId>
             <artifactId>controlsfx</artifactId>
-            <version>11.1.0</version>
+            <version>11.2.0</version>
         </dependency>
         <!-- JSON dependency (org.json) -->
         <dependency>
@@ -154,19 +154,6 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
-                    <!-- Non funzia l'accesso al register se no QUINDI DA FIXARE!!!!
-                    DEVI FARE QUESTA COSA SU INTELLIJ:
-                    VAI SU: Run > Edit Configurations.
-                    fai modify options (dovrebbe essere in azzurrino) e fai schiaccia su add VM options.
-                    In VM Options field, aggiungi:
-                    - -add-opens javafx.base/com.sun.javafx.event=org.controlsfx.controls
-                    le due linette iniziali vanno atttaccate ma non me lo fa fare:
-                    FAI Apply e ok poi runna.
-                    -->
-                    <compilerArgs>
-                        <arg>--add-opens</arg>
-                        <arg>javafx.base/com.sun.javafx.event=org.controlsfx.controls</arg>
-                    </compilerArgs>
                 </configuration>
 
             </plugin>
@@ -178,7 +165,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.fl.findthepitch/com.fl.findthepitch.HelloApplication</mainClass>
+                            <mainClass>com.fl.findthepitch.Main</mainClass> <!-- prima cera HelloApplication -->
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
                             <jlinkImageName>app</jlinkImageName>
@@ -189,6 +176,27 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- add by chat -->
+            <!-- Exec Maven Plugin (Runtime args for JavaFX application) -->
+<!--            <plugin>-->
+<!--                <groupId>org.codehaus.mojo</groupId>-->
+<!--                <artifactId>exec-maven-plugin</artifactId>-->
+<!--                <version>3.1.0</version>-->
+<!--                <executions>-->
+<!--                    <execution>-->
+<!--                        <goals>-->
+<!--                            <goal>java</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <mainClass>com.fl.findthepitch.HelloApplication</mainClass>-->
+<!--                            <arguments>-->
+<!--                                <argument>&#45;&#45;add-opens</argument>-->
+<!--                                <argument>javafx.base/com.sun.javafx.event=org.controlsfx.controls</argument>-->
+<!--                            </arguments>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+<!--                </executions>-->
+<!--            </plugin>-->
         </plugins>
 
         <!-- Fix placement of resources -->
