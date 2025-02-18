@@ -62,8 +62,6 @@ public class NewMapController {
 
     dbManager db = new dbManager();
 
-    PitchSession ps;
-
     private static String city;
 
     private final List<MapLayer> activeMarkers = new ArrayList<>();
@@ -154,7 +152,10 @@ public class NewMapController {
         if (selectedItem != null) {
             // Get the current stage from the event's source (the list view)
             Stage currentStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            ps.getInstance().setPitchData(parsePitchData(selectedItem));
+
+            PitchSession ps = PitchSession.getInstance();
+            ps.setPitchData(parsePitchData(selectedItem));
+
             // Now call the switchScene method with the currentStage as an argument
             SceneManager.switchScene(currentStage, "/descriptionOfThePitch.fxml", "Pitch Description");
         }
@@ -168,6 +169,7 @@ public class NewMapController {
             String[] parts = d.split(":", 2);
             if (parts.length == 2) {
                 values.put(parts[0].trim().toLowerCase(), parts[1].trim());
+                System.out.println(values.put(parts[0].trim().toLowerCase(), parts[1].trim()));
             }
         }
         // Build the PitchData object using the extracted values

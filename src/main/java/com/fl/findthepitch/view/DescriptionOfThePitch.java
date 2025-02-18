@@ -15,9 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 
-import java.io.IOException;
-import java.util.List;
-
 public class DescriptionOfThePitch {
 
     @FXML
@@ -33,8 +30,6 @@ public class DescriptionOfThePitch {
     TextArea textArea;
 
     private HostServices hostServices;
-
-    PitchSession pc;
 
     @FXML
     Label labelName;
@@ -84,6 +79,7 @@ public class DescriptionOfThePitch {
     @FXML
     Label labelSurface;
 
+    PitchSession ps;
     dbManager dbManager = new dbManager();
 
     //Setter that will be called by the Application class
@@ -92,7 +88,12 @@ public class DescriptionOfThePitch {
     }
 
     public void initialize() {
-        updateUIWithPitchData(retrievePitchValues());
+        ps = PitchSession.getInstance(); // Ensure ps is initialized
+        if (ps == null) {
+            System.err.println("Error: PitchSession instance is null!");
+        } else {
+            retrievePitchValues();
+        }
     }
 
     @FXML
@@ -106,44 +107,72 @@ public class DescriptionOfThePitch {
 
     @FXML
     private void goBack() {
-        SceneManager.switchScene("/NewMapController.fxml", "Search Field", backButton);
+        SceneManager.switchScene("/newMap.fxml", "Search Field", backButton);
     }
 
-    private PitchData retrievePitchValues() {
-        if(pc == null) {
-            System.err.println("error no data");
+    private void retrievePitchValues() {
+        // Check if PitchSession and PitchData exist
+        if (ps == null || ps.getPitchData() == null) {
+            System.err.println("Error: No pitch data available.");
+            showErrorAlert("Pitch data is unavailable. Please try again.");
+            return;
         }
 
-        Task<PitchData> returnPitchTask = new Task<PitchData>() {
+        // Create a new Task to fetch pitch data asynchronously
+        Task<PitchData> returnPitchTask = new Task<>() {
             @Override
             protected PitchData call() throws Exception {
-                PitchData dataToSend = new PitchData(pc.getPitchData().getName(), pc.getPitchData().getCity(), pc.getPitchData().getCity(), pc.getPitchData().getSurfaceType());
-                return (PitchData) ServerConnection.sendCommandObj("RETRIEVEPITCH", dataToSend);
-                }
-            };
+                PitchData dataToSend = new PitchData(
+                        ps.getPitchData().getName(),
+                        ps.getPitchData().getAddress(),
+                        ps.getPitchData().getCity(),
+                        ps.getPitchData().getPitchType()
+                );
 
-            //When the task completes successfully, process the server response on the UI thread
-            returnPitchTask.setOnSucceeded(event -> {
-                PitchData response = returnPitchTask.getValue();
-                if (response != null) {
-                    System.out.println("Pitch retrieved successfully.");
-                    updateUIWithPitchData(response);
+                System.out.println("Sending request to retrieve pitch data: " + dataToSend.getName());
+                Object serverResponse = ServerConnection.sendCommandObj("RETRIEVEPITCH", dataToSend);
+
+                // Ensure the response is of the correct type
+                if (serverResponse instanceof PitchData) {
+                    return (PitchData) serverResponse;
                 } else {
-                    System.out.println("Pitch retrieval fail");
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Pitch Retrieval Error");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Pitch Retrieval failed. Please try again.");
-                    alert.showAndWait();
+                    System.err.println("Invalid response from server: " + serverResponse);
+                    return null;
                 }
-            });
-            return null; //TO FIX
-        }
+            }
+        };
 
-    private void showAlert(List<String> strings) {
+        //Handle task success
+        returnPitchTask.setOnSucceeded(event -> {
+            PitchData response = returnPitchTask.getValue();
+            if (response != null) {
+                System.out.println("Pitch retrieved successfully.");
+                updateUIWithPitchData(response);
+            } else {
+                System.err.println("Pitch retrieval failed.");
+                showErrorAlert("Pitch retrieval failed. Please try again.");
+            }
+        });
+
+        // Handle task failure
+        returnPitchTask.setOnFailed(event -> {
+            Throwable ex = returnPitchTask.getException();
+            ex.printStackTrace();
+            showErrorAlert("An error occurred while loading the pitch description: " + ex.getMessage());
+        });
+
+        // Start the task in a new background thread
+        Thread retrievePitchThread = new Thread(returnPitchTask);
+        retrievePitchThread.setDaemon(true);
+        retrievePitchThread.start();
+    }
+
+    // Helper method to show error alerts
+    private void showErrorAlert(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle("Pitch Retrieving");
-        alert.setContentText("No pitch retrieved");
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
         alert.showAndWait();
     }
 
