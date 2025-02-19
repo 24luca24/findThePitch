@@ -70,11 +70,39 @@ public class ServerSlave extends Thread {
                     case "RETRIEVEPITCH":
                         try {
                             PitchData pitchData = (PitchData) in.readObject();
-                            PitchData dataToRetrieve = dbManager.retrievePitchValue(pitchData.getName(), pitchData.getAddress(), pitchData.getCity(), String.valueOf(pitchData.getSurfaceType()));
-                            out.writeObject(dataToRetrieve);
+                            if (pitchData == null) {
+                                System.err.println("Error: Received null PitchData from client.");
+                                out.writeObject("ERROR");
+                                out.flush();
+                                break;
+                            }
+                            System.out.println("Retrieving pitch data for: " + pitchData.getName());
+
+                            PitchData dataToRetrieve = dbManager.retrievePitchValue(
+                                    pitchData.getName(),
+                                    pitchData.getAddress(),
+                                    pitchData.getCity(),
+                                    String.valueOf(pitchData.getPitchType())
+                            );
+
+                            //Check if database retrieval was successful
+                            if (dataToRetrieve == null) {
+                                System.err.println("Error: No data found for the given pitch.");
+                                out.writeObject("ERROR");
+                            } else {
+                                System.out.println("Pitch data found. Sending data to client.");
+                                out.writeObject(dataToRetrieve);
+                            }
+
                             out.flush();
                         } catch (Exception e) {
                             callException("RETRIEVEPITCH", e);
+                            try {
+                                out.writeObject("ERROR");
+                                out.flush();
+                            } catch (IOException ioException) {
+                                System.err.println("Error writing ERROR response: " + ioException.getMessage());
+                            }
                         }
                         break;
 

@@ -32,11 +32,11 @@ public class PitchData implements Serializable {
     private SurfaceType surfaceType;
 
     //constructor used in NewMapController list to save the current selected object and pass it into the description page
-    public PitchData(String name, String address, String city, SurfaceType surfaceType) {
+    public PitchData(String name, String address, String city, PitchType pitchType) {
         this.name = name;
         this.address = address;
         this.city = city;
-        this.surfaceType = surfaceType;
+        this.pitchType = pitchType;
     }
 
     private PitchData(Builder builder) {
@@ -254,6 +254,6 @@ public class PitchData implements Serializable {
     }
 
     public SurfaceType getSurfaceType() {
-        return surfaceType;
+        return this.surfaceType;
     }
 }

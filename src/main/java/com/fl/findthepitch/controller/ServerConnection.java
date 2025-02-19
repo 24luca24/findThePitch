@@ -62,14 +62,7 @@ public class ServerConnection {
         out.flush();
 
         try {
-            Object response = in.readObject();
-            if (response instanceof String) {
-                System.out.println("Response received: " + response);
-                return (String) response;
-            } else {
-                System.err.println("Unexpected response type: " + response.getClass().getName());
-                return "ERROR";
-            }
+            return in.readObject();
         } catch (EOFException e) {
             System.err.println("Server closed connection unexpectedly.");
             e.printStackTrace();
