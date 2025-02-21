@@ -10,6 +10,7 @@ import com.fl.findthepitch.model.fieldTypeInformation.Price;
 import com.fl.findthepitch.model.fieldTypeInformation.SurfaceType;
 import com.fl.findthepitch.service.AddressValidator;
 import com.gluonhq.maps.MapView;
+import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -151,27 +152,35 @@ public class AddField {
 
     //Initialize map
     private void initializeMap() {
-        mapView = new MapView();
-        mapView.setCenter(45.53333, 9.2);
-        mapView.setZoom(15);
+        synchronized (this) {
+            Platform.runLater(() -> {
+                mapView = new MapView();
+                mapView.setCenter(45.53333, 9.2);
+                mapView.setZoom(15);
 
-        //Set the map's size to match its container
-        mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
-        mapContainer.getChildren().add(mapView);
+                // Ensure the map is added only once
+                if (!mapContainer.getChildren().contains(mapView)) {
+                    mapContainer.getChildren().add(mapView);
+                }
 
-        //Anchor the mapView to all sides of the container
-        AnchorPane.setTopAnchor(mapView, 0.0);
-        AnchorPane.setBottomAnchor(mapView, 0.0);
-        AnchorPane.setLeftAnchor(mapView, 0.0);
-        AnchorPane.setRightAnchor(mapView, 0.0);
+                //Set the map's size to match its container
+                mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
 
-        //Adjust MapView size if the container size changes
-        mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
-                mapView.setPrefWidth(newWidth.doubleValue())
-        );
-        mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) ->
-                mapView.setPrefHeight(newHeight.doubleValue())
-        );
+                //Anchor the mapView to all sides of the container
+                AnchorPane.setTopAnchor(mapView, 0.0);
+                AnchorPane.setBottomAnchor(mapView, 0.0);
+                AnchorPane.setLeftAnchor(mapView, 0.0);
+                AnchorPane.setRightAnchor(mapView, 0.0);
+
+                //Adjust MapView size if the container size changes
+                mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
+                        mapView.setPrefWidth(newWidth.doubleValue())
+                );
+                mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) ->
+                        mapView.setPrefHeight(newHeight.doubleValue())
+                );
+            });
+        }
     }
 
     //Initialize combobox
@@ -328,6 +337,7 @@ public class AddField {
 
     }
 
+    //TODO: IMPLEMENT THE FUNCTION TO ADD FIELD IN THE MAP
     private void showFieldInMap() {
         System.out.println("new field created");
     }

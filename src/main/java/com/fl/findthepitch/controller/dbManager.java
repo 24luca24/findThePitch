@@ -501,7 +501,4 @@ public class dbManager {
 
         return null; // Return null if no pitch data is found
     }
-
-
-
 }

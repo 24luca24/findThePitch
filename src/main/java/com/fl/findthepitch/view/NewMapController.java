@@ -93,34 +93,42 @@ public class NewMapController {
     }
 
     private void initializeMap() {
-        mapView = new MapView();
+        synchronized (this) {
+            Platform.runLater(() -> {
+                if (mapView == null) {
+                    mapView = new MapView();
+                }
 
-        //Load football field on the city of the user
-        if (city == null || city.isEmpty()) {
-            city = "Milano";
-            addPitchMarkers(city); //to handle non-logged user we retrieve Milan pitch
-        } else {
-            addPitchMarkers(city);
+                // Load football field on the city of the user
+                if (city == null || city.isEmpty()) {
+                    city = "Milano";
+                }
+
+                addPitchMarkers(city); // Ensure this is inside Platform.runLater() if needed
+
+                // Set dimension to adapt to the container
+                if (!mapContainer.getChildren().contains(mapView)) {
+                    mapContainer.getChildren().add(mapView);
+                }
+
+                // Anchor the mapView to all sides of container
+                AnchorPane.setTopAnchor(mapView, 0.0);
+                AnchorPane.setBottomAnchor(mapView, 0.0);
+                AnchorPane.setLeftAnchor(mapView, 0.0);
+                AnchorPane.setRightAnchor(mapView, 0.0);
+
+                // Update map dimensions when container resizes
+                mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
+                        mapView.setPrefWidth(newWidth.doubleValue())
+                );
+                mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) ->
+                        mapView.setPrefHeight(newHeight.doubleValue())
+                );
+            });
         }
-
-        //Set dimension to adapt to the container
-        mapView.setPrefSize(mapContainer.getPrefWidth(), mapContainer.getPrefHeight());
-        mapContainer.getChildren().add(mapView);
-
-        //Anchor the mapView to all side of container
-        AnchorPane.setTopAnchor(mapView, 0.0);
-        AnchorPane.setBottomAnchor(mapView, 0.0);
-        AnchorPane.setLeftAnchor(mapView, 0.0);
-        AnchorPane.setRightAnchor(mapView, 0.0);
-
-        //Update map dimension if dimension of the container change
-        mapContainer.widthProperty().addListener((obs, oldWidth, newWidth) ->
-                mapView.setPrefWidth(newWidth.doubleValue())
-        );
-        mapContainer.heightProperty().addListener((obs, oldHeight, newHeight) ->
-                mapView.setPrefHeight(newHeight.doubleValue())
-        );
     }
+
+
 
     //Method to set the value of comboBox
     private void fillComboBox() {
@@ -212,10 +220,11 @@ public class NewMapController {
     //Method for the automatic zoom on the map
     private void addPitchMarkers(String city) {
         //Removing all existing mark on the map
-        for (MapLayer layer : activeMarkers) {
-            mapView.removeLayer(layer);
-        }
-        activeMarkers.clear();
+        // Clear existing markers safely before adding new ones
+        Platform.runLater(() -> {
+            activeMarkers.forEach(mapView::removeLayer);
+            activeMarkers.clear();
+        });
 
         //Return address + city, Italy String
         List<String> pitchAddresses = db.retrievePitchForLocation(city);
@@ -225,25 +234,27 @@ public class NewMapController {
         }
 
         List<MapPoint> pitchLocations = new ArrayList<>();
+        int[] completedRequests = {0}; // Track completed requests
 
         for (String address : pitchAddresses) {
             geocodingService.geocodeAddress(address).thenAccept(coordinates -> {
                 double latitude = coordinates.getLatitude();
                 double longitude = coordinates.getLongitude();
                 MapPoint pitchLocation = new MapPoint(latitude, longitude);
-                pitchLocations.add(pitchLocation);
 
-                //Adding MapPoint and keep it in the active MapPoint list
-                javafx.application.Platform.runLater(() -> {
+                Platform.runLater(() -> {
                     MapLayer markerLayer = createMarkerLayer(pitchLocation);
                     mapView.addLayer(markerLayer);
                     activeMarkers.add(markerLayer);
-
-                    //After adding all mark we adapt the zoom
-                    if (pitchLocations.size() == pitchAddresses.size()) {
-                        fitMapToBounds(pitchLocations);
-                    }
                 });
+
+                pitchLocations.add(pitchLocation);
+                completedRequests[0]++;
+
+                // Only call fitMapToBounds after all geocoding requests are complete
+                if (completedRequests[0] == pitchAddresses.size()) {
+                    Platform.runLater(() -> fitMapToBounds(pitchLocations));
+                }
             }).exceptionally(ex -> {
                 ex.printStackTrace();
                 return null;
@@ -253,7 +264,10 @@ public class NewMapController {
 
     //Method to adapt map to all marker
     private void fitMapToBounds(List<MapPoint> points) {
-        if (points.isEmpty()) return;
+        if (points == null || points.isEmpty()) {
+            System.out.println("No points available for bounding");
+            return;
+        }
 
         double minLat = points.stream().mapToDouble(MapPoint::getLatitude).min().orElse(0);
         double maxLat = points.stream().mapToDouble(MapPoint::getLatitude).max().orElse(0);
